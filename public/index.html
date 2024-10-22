@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instituto de Educación Superior N° 6021 Juan Carlos Dávalos</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="icon" type="image/jpg" href="./esc.ico"/>
+</head>
+<body>
+    <header>
+        <h1>Instituto de Educación Superior N° 6021 Juan Carlos Dávalos</h1>
+        <nav>
+            <ul >
+                <li><a class="option" href="#" onclick="showSection('propuestas')">Ver Propuestas Académicas</a></li>
+                <li><a class="option" href="#" onclick="showSection('disponibilidad')">Consultar Disponibilidad</a></li>
+                <li><a class="option" href="#" onclick="showSection('preinscripcion')">Preinscripción</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="portada">
+            <h2>Te damos la Bienvenido a nuestro portal de Pre-Inscripción</h2>
+            <p>Tu futuro comienza aquí. Descubre nuestras propuestas académicas y cómo puedes inscribirte.</p>
+        </section>
+
+        <section id="propuestas" style="display: none;">
+            <h2>Propuestas Académicas</h2>
+            <p>Aquí puedes ver todas nuestras propuestas académicas.</p>
+            <!-- Agrega el contenido de propuestas académicas aquí -->
+        </section>
+
+        <section id="disponibilidad" style="display: none;">
+            <h2>Consultar Disponibilidad</h2>
+            <p>Aquí puedes consultar la disponibilidad de cursos.</p>
+            <!-- Agrega el contenido de disponibilidad aquí -->
+        </section>
+
+        <section id="preinscripcion" style="display: none;">
+            <h2>Formulario de Preinscripción</h2>
+            <form>
+                <label for="apellidos">Apellidos:</label>
+                <input type="text" id="apellidos" name="apellidos" required placeholder="apellidos">
+
+                <label for="nombres">Nombres:</label>
+                <input type="text" id="nombres" name="nombres" required placeholder="nombres">
+
+                <label for="dni">Dni:</label>
+                <input type="number" id="dni" name="dni" required placeholder="Documento">
+                
+               
+                
+                <label for="carrera">Carrera:</label>
+                <select id="carrera" name="carrera" required>
+                    <option value="">Seleccione una Carrera</option>
+                    <option value="curso1">Prof. de Informatica</option>
+                    <option value="curso2">Prof. de Lengua</option>
+                    <option value="curso3">Prof. de Historia</option>
+                </select>
+                
+                <input type="submit" value="Enviar">
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Instituto de Educación Superior N° 6021 Juan Carlos Dávalos. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function showSection(sectionId) {
+            // Ocultar todas las secciones
+            document.getElementById('propuestas').style.display = 'none';
+            document.getElementById('disponibilidad').style.display = 'none';
+            document.getElementById('preinscripcion').style.display = 'none';
+            
+            // Mostrar la sección seleccionada
+            document.getElementById(sectionId).style.display = 'block';
+        }
+    </script>
+</body>
+</html>
