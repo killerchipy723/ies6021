@@ -1,50 +1,180 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <title>Formulario de Verificación</title>
-</head>
-<body>
-    <div class="container mt-5">
-        <h2>Verificación de Datos</h2>
-        <form id="formulario">
-            <div class="mb-3">
-                <label for="documento" class="form-label">Número de Documento</label>
-                <input type="text" class="form-control" id="documento" required>
-            </div>
-            <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="nombre" readonly>
-            </div>
-            <div class="mb-3">
-                <label for="apellido" class="form-label">Apellido</label>
-                <input type="text" class="form-control" id="apellido" readonly>
-            </div>
-            <div class="mb-3">
-                <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
-                <input type="text" class="form-control" id="fechaNacimiento" readonly>
-            </div>
-            <button type="submit" class="btn btn-primary">Buscar</button>
-        </form>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro de Alumnos</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="icon" href="./esc.ico" />
+    <link rel="stylesheet" href="./estilosRegistro.css" />
+  </head>
+  <body>
+    <h3 class="title">
+      Instituto de Educación Superior N° 6.021 Juan Carlos Dávalos
+    </h3>
+
+    <div class="form-container">
+      <h2>Registro de Alumnos</h2>
+     
+      <form id="registration-form">
+        <!-- Campos anteriores -->
+        <div class="form-group">
+          <label for="dni1">DNI</label>
+          <input type="text" id="dni1" name="dni1" required oninput="capitalize(this)" />
+        </div>
+        <div class="form-group">
+          <label for="dni2">Repetir DNI</label>
+          <input type="text" id="dni2" name="dni2" required oninput="capitalize(this)" />
+        </div>
+        <div class="form-group">
+          <label for="cuil">CUIL</label>
+          <input type="text" id="cuil" name="cuil" required oninput="formatCuil(this)" maxlength="13" />
+        </div>
+        <div class="form-group">
+          <label for="apellidos">Apellidos</label>
+          <input type="text" id="apellidos" name="apellidos" required oninput="capitalize(this)" />
+        </div>
+        <div class="form-group">
+          <label for="nombres">Nombres</label>
+          <input type="text" id="nombres" name="nombres" required oninput="capitalize(this)" />
+        </div>
+        <div class="form-group">
+          <label for="fechanac">Fecha de Nacimiento</label>
+          <input type="date" id="fechanac" name="fechanac" required />
+        </div>
+        <div class="form-group">
+          <label for="localidad">Localidad</label>
+          <input type="text" id="localidad" name="localidad" required oninput="capitalize(this)" />
+        </div>
+
+        <!-- Nuevo campo de correo -->
+        <div class="form-group">
+          <label for="correo">Correo Electrónico</label>
+          <input type="email" id="correo" name="correo" required />
+        </div>
+
+        <div class="form-group">
+          <label for="telefono">Teléfono</label>
+          <input type="number" id="telefono" name="telefono" required />
+        </div>
+        
+        <!-- Campos de contraseña -->
+        <div class="form-group">
+          <label for="clave1">Contraseña</label>
+          <input type="password" id="clave1" name="clave1" required />
+        </div>
+        <div class="form-group">
+          <label for="clave2">Repetir Contraseña</label>
+          <input type="password" id="clave2" name="clave2" required />
+        </div>
+
+        <!-- Resto del formulario -->
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="acuerdo" name="acuerdo" onclick="toggleSubmitButton()" />
+            Acepto enviar mis datos para la inscripción en el IES 6.021
+          </label>
+        </div>
+        <button type="submit" class="button" id="submit-button" disabled>
+          Registrar
+        </button>
+        <div class="message-container" id="message-container" style="display: none"></div>
+      </form>
     </div>
 
-    <script>
-        document.getElementById('formulario').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const documento = document.getElementById('documento').value;
+    <footer>
+      &copy; 2024 Instituto de Educación Superior N° 6.021. Todos los derechos reservados.
+    </footer>
 
-            try {
-                const response = await fetch(`/api/usuario/${documento}`);
-                const data = await response.json();
-                document.getElementById('nombre').value = data.nombre;
-                document.getElementById('apellido').value = data.apellido;
-                document.getElementById('fechaNacimiento').value = data.fechaNacimiento;
-            } catch (error) {
-                alert('Error al obtener los datos. Verifica el número de documento.');
-            }
-        });
+    <script>
+      function capitalize(input) {
+        const words = input.value.split(" ");
+        for (let i = 0; i < words.length; i++) {
+          words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1).toLowerCase();
+        }
+        input.value = words.join(" ");
+      }
+
+      function formatCuil(input) {
+        let value = input.value.replace(/\D/g, "");
+        if (value.length > 11) value = value.slice(0, 11);
+
+        if (value.length > 10) {
+          value = `${value.slice(0, 2)}-${value.slice(2, 10)}-${value.slice(10, 11)}`;
+        } else if (value.length > 2) {
+          value = `${value.slice(0, 2)}-${value.slice(2)}`;
+        }
+        input.value = value;
+      }
+
+      function toggleSubmitButton() {
+        const checkBox = document.getElementById("acuerdo");
+        const submitButton = document.getElementById("submit-button");
+        submitButton.disabled = !checkBox.checked;
+      }
+
+      document.getElementById("registration-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const dni1 = document.getElementById("dni1").value;
+        const dni2 = document.getElementById("dni2").value;
+        const clave1 = document.getElementById("clave1").value;
+        const clave2 = document.getElementById("clave2").value;
+
+        if (dni1 !== dni2) {
+          showMessage("Los DNI no coinciden. Por favor, verifica e inténtalo de nuevo.", "error");
+          return;
+        }
+
+        if (clave1 !== clave2) {
+          showMessage("Las contraseñas no coinciden. Por favor, verifica e inténtalo de nuevo.", "error");
+          return;
+        }
+
+        const confirmation = confirm("Por favor, verifica los datos ingresados. Si algún dato está cargado de manera errónea, se dará de baja.");
+        if (!confirmation) return;
+
+        try {
+          const response = await fetch("/registro", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              dni1,
+              dni2,
+              cuil: document.getElementById("cuil").value,
+              apellidos: document.getElementById("apellidos").value,
+              nombres: document.getElementById("nombres").value,
+              fechanac: document.getElementById("fechanac").value,
+              localidad: document.getElementById("localidad").value,
+              correo: document.getElementById("correo").value,
+              telefono: document.getElementById("telefono").value,
+              clave1,
+              clave2
+            })
+          });
+
+          const data = await response.json();
+          if (response.ok) {
+            showMessage(data.message, "info");
+            document.getElementById("registration-form").reset();
+          } else {
+            showMessage(data.error, "error");
+          }
+        } catch (error) {
+          console.error("Error al enviar el formulario:", error);
+          showMessage("Error al enviar el formulario", "error");
+        }
+      });
+
+      function showMessage(message, type) {
+        const messageContainer = document.getElementById("message-container");
+        messageContainer.style.display = "block";
+        messageContainer.textContent = message;
+        messageContainer.className = type === "error" ? "error-message" : "info-message";
+      }
     </script>
-</body>
+  </body>
 </html>
