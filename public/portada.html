@@ -76,42 +76,43 @@
                     <h5>Datos del Alumno</h5>
                 </div>
                 <div class="card-body">
-                    <form id="preinscripcion-form">
+                    <!-- Panel de Datos del Alumno -->
+                    <div id="datos-alumno">
                         <div class="mb-3">
-                            <label for="apellidos" class="form-label">Apellidos:</label>
-                            <input type="text" class="form-control" id="apellidos" readonly>
+                            <strong>Apellidos:</strong> <span id="apellidos">Juan Perez</span>
                         </div>
                         <div class="mb-3">
-                            <label for="nombres" class="form-label">Nombres:</label>
-                            <input type="text" class="form-control" id="nombres" readonly>
+                            <strong>Nombres:</strong> <span id="nombres">Juan</span>
                         </div>
                         <div class="mb-3">
-                            <label for="cuil" class="form-label">Cuil:</label>
-                            <input type="text" class="form-control" id="cuil" readonly>
+                            <strong>Cuil:</strong> <span id="cuil">20-12345678-9</span>
                         </div>
                         <div class="mb-3">
-                            <label for="dni" class="form-label">DNI:</label>
-                            <input type="text" class="form-control" id="dni" readonly>
+                            <strong>DNI:</strong> <span id="dni">12345678</span>
                         </div>
                         <div class="mb-3">
-                            <label for="localidad" class="form-label">Localidad:</label>
-                            <input type="text" class="form-control" id="localidad" readonly>
+                            <strong>Localidad:</strong> <span id="localidad">San Miguel de Tucumán</span>
                         </div>
                         <div class="mb-3">
-                            <label for="telefono" class="form-label">Teléfono:</label>
-                            <input type="text" class="form-control" id="telefono" readonly>
+                            <strong>Teléfono:</strong> <span id="telefono">3815555555</span>
                         </div>
-                        <div class="mb-3">
-                            <label for="carrera" class="form-label">Seleccionar Carrera:</label>
-                            <select class="form-select" id="carrera" required>
-                                <option value="" disabled selected>Seleccione una carrera</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Enviar Preinscripción</button>
-                    </form>
+                    </div>
+        
+                    <!-- Selector de Carrera -->
+                    <div class="mb-3">
+                        <label for="carrera" class="form-label">Seleccionar Carrera:</label>
+                        <select class="form-select" id="carrera" required>
+                            <option value="" disabled selected>Seleccione una carrera</option>
+                            <!-- Opciones de carrera a llenar dinámicamente -->
+                        </select>
+                    </div>
+                    
+                    <!-- Botón de Envío -->
+                    <button type="submit" class="btn btn-primary">Enviar Preinscripción</button>
                 </div>
             </div>
         </section>
+        
     </main>
 
     <footer class="text-center p-3 mt-4">
@@ -179,6 +180,40 @@
                 console.error('Error al cargar las carreras:', error);
             }
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+    // Realiza una solicitud fetch al endpoint de datos del alumno
+    fetch('/datos-alumno')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener datos del alumno');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Rellena el panel con los datos obtenidos del servidor
+            document.getElementById('apellidos').textContent = data.apellidos;
+            document.getElementById('nombres').textContent = data.nombres;
+            document.getElementById('cuil').textContent = data.cuil;
+            document.getElementById('dni').textContent = data.dni;
+            document.getElementById('localidad').textContent = data.localidad;
+            document.getElementById('telefono').textContent = data.telefono;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+    // Cargar las opciones de carrera en el combobox
+    const carreras = ['Ingeniería', 'Medicina', 'Derecho', 'Arquitectura'];
+    const carreraSelect = document.getElementById('carrera');
+    carreras.forEach(carrera => {
+        const option = document.createElement('option');
+        option.value = carrera;
+        option.textContent = carrera;
+        carreraSelect.appendChild(option);
+    });
+});
+
 
         window.onload = () => {
             showSection('portada');

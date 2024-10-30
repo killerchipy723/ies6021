@@ -43,3 +43,12 @@ body {
 .btn-custom:hover {
     background-color: #4a90e2;
 }
+
+.salir{
+    text-decoration: none;
+    background: #00509e;
+    color: #ffff;
+    border: #00509e;
+    border-radius: 5px;
+
+}
