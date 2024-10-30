@@ -37,7 +37,7 @@ app.use(
 
 
 function verificarAutenticacion(req, res, next) {
-    if (req.session.user || ['/portada', '/registro'].includes(req.path)) {
+    if (req.session.user || ['/login', '/registro', '/send-reset-email', '/reset-password', '/update-password'].includes(req.path)) {
         next();
     } else {
         res.redirect('/login');
@@ -98,8 +98,9 @@ app.get('/datos-alumno', verificarAutenticacion, (req, res) => {
 
 // Ruta protegida para mostrar el nombre del alumno que se logueó
 app.get('/portada', verificarAutenticacion, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'portada.html'));
     const nombreCompleto = `${req.session.user.apellidos} ${req.session.user.nombres}`;
-    res.render('portada', { nombreCompleto });
+    //res.render('portada', { nombreCompleto });  // Asegúrate de tener 'portada.ejs' en la carpeta de vistas
 });
 
 // Ruta protegida para obtener las carreras activas
