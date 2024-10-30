@@ -4,6 +4,7 @@ const db = require('./public/db'); // Importar la conexión a la base de datos
 const session = require('express-session'); // Para manejo de sesión
 const nodemailer = require('nodemailer'); // O emailjs, según lo que prefieras
 const crypto = require('crypto');
+const mysql = require('mysql2/promise'); 
 
 const app = express();
 const port = 3000;
@@ -34,21 +35,56 @@ app.post('/login', async (req, res) => {
         if (user.length > 0) {
             req.session.user = {
                 idalumno: user[0].idalumno,
-                dni: user[0].dni,
+                dni: user[0].dni, 
                 correo: user[0].correo,
                 nombres: user[0].nombres,
                 apellidos: user[0].apellidos
-            }; 
-            console.log("Inicio de sesión exitoso.");
-            return res.status(200).json({ success: true });
+            };
+            const nombreCompleto = `${user[0].apellidos} ${user[0].nombres}`;
+            return res.status(200).json({ success: true, nombreCompleto });
         } else {
-            console.log("DNI o contraseña incorrectos.");
             return res.status(401).json({ success: false, message: 'DNI o contraseña incorrectos.' });
         }
     } catch (error) {
         console.error('Error en la autenticación:', error);
         return res.status(500).json({ message: 'Error en la autenticación' });
     }
+});
+
+
+// Ruta para mostrar el nombre del alumno que se logueo
+app.get('/portada', (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login'); // Redirigir al login si no está autenticado
+    }
+
+    // Enviar el nombre completo al renderizar la página
+    const nombreCompleto = `${req.session.user.apellidos} ${req.session.user.nombres}`;
+    res.render('portada', { nombreCompleto });
+});
+
+//Tabla carreras en propuestas academicas - portada
+
+app.get('/carreras', async (req, res) => {
+    const query = "SELECT idcarrera, nombre, tipo, duracion, estado FROM carreras where estado = 'Activo'";
+
+    try {
+        const [results] = await db.query(query); // No necesitas db.promise() aquí
+        res.json(results);
+    } catch (err) {
+        console.error('Error al obtener las carreras:', err);
+        res.status(500).json({ error: 'Error al obtener las carreras' });
+    }
+});
+
+
+app.get('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).send('Error al cerrar la sesión');
+        }
+        res.redirect('/login');
+    });
 });
 
 
@@ -85,7 +121,7 @@ app.post('/send-reset-email', async (req, res) => {
             from: 'ies6.021jc@gmail.com', // Cambia esto por tu dirección de correo
             to: email,
             subject: 'Restablecimiento de Contraseña',
-        };
+        }; 
 
         // Envía el correo usando Nodemailer
         transporter.sendMail(message, (err, info) => {

@@ -24,9 +24,10 @@ header {
 }
 
 header h1 {
-    font-size: 2em;
+    font-size: 1.8em; /* Tamaño de fuente ajustado */
     margin-bottom: 10px;
     letter-spacing: 1px;
+    font-weight: bold; /* Negrita */
 }
 
 header nav ul {
@@ -147,10 +148,34 @@ footer {
     border-radius: 10px;
 }
 
+/* Estilo para el icono de alumno */
+.student-icon {
+    font-size: 3em; /* Tamaño del icono ajustado */
+    color: #ffff; /* Color del icono */
+    margin-right: 10px; /* Espaciado a la derecha */
+}
+
+/* Estilos para el botón de cerrar sesión */
+.logout-button {
+    background-color: #d9534f; /* Color de fondo */
+    color: white; /* Color del texto */
+    padding: 10px 20px; /* Espaciado */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor */
+    transition: background-color 0.3s; /* Efecto de transición */
+    font-size: 1em; /* Tamaño de fuente */
+    font-weight: bold; /* Negrita */
+}
+
+.logout-button:hover {
+    background-color: #c9302c; /* Color de fondo al pasar el mouse */
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     header h1 {
-        font-size: 1.8em;
+        font-size: 1.6em;
     }
 
     header nav ul {
@@ -181,7 +206,7 @@ footer {
 
 @media (max-width: 500px) {
     header h1 {
-        font-size: 1.5em;
+        font-size: 1.4em;
     }
 
     .form-container {

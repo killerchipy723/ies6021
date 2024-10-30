@@ -117,57 +117,65 @@
       }
 
       document.getElementById("registration-form").addEventListener("submit", async (event) => {
-        event.preventDefault();
+  event.preventDefault();
 
-        const dni1 = document.getElementById("dni1").value;
-        const dni2 = document.getElementById("dni2").value;
-        const clave1 = document.getElementById("clave1").value;
-        const clave2 = document.getElementById("clave2").value;
+  const dni1 = document.getElementById("dni1").value;
+  const dni2 = document.getElementById("dni2").value;
+  const clave1 = document.getElementById("clave1").value;
+  const clave2 = document.getElementById("clave2").value;
 
-        if (dni1 !== dni2) {
-          showMessage("Los DNI no coinciden. Por favor, verifica e inténtalo de nuevo.", "error");
-          return;
-        }
+  if (dni1 !== dni2) {
+    showMessage("Los DNI no coinciden. Por favor, verifica e inténtalo de nuevo.", "error");
+    return;
+  }
 
-        if (clave1 !== clave2) {
-          showMessage("Las contraseñas no coinciden. Por favor, verifica e inténtalo de nuevo.", "error");
-          return;
-        }
+  if (clave1 !== clave2) {
+    showMessage("Las contraseñas no coinciden. Por favor, verifica e inténtalo de nuevo.", "error");
+    return;
+  }
 
-        const confirmation = confirm("Por favor, verifica los datos ingresados. Si algún dato está cargado de manera errónea, se dará de baja.");
-        if (!confirmation) return;
+  const confirmation = confirm("Por favor, verifica los datos ingresados. Si algún dato está cargado de manera errónea, se dará de baja.");
+  if (!confirmation) return;
 
-        try {
-          const response = await fetch("/registro", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              dni1,
-              dni2,
-              cuil: document.getElementById("cuil").value,
-              apellidos: document.getElementById("apellidos").value,
-              nombres: document.getElementById("nombres").value,
-              fechanac: document.getElementById("fechanac").value,
-              localidad: document.getElementById("localidad").value,
-              correo: document.getElementById("correo").value,
-              telefono: document.getElementById("telefono").value,
-              clave1,
-              clave2
-            })
-          });
+  try {
+    const response = await fetch("/registro", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        dni1,
+        dni2,
+        cuil: document.getElementById("cuil").value,
+        apellidos: document.getElementById("apellidos").value,
+        nombres: document.getElementById("nombres").value,
+        fechanac: document.getElementById("fechanac").value,
+        localidad: document.getElementById("localidad").value,
+        correo: document.getElementById("correo").value,
+        telefono: document.getElementById("telefono").value,
+        clave1,
+        clave2
+      })
+    });
 
-          const data = await response.json();
-          if (response.ok) {
-            showMessage(data.message, "info");
-            document.getElementById("registration-form").reset();
-          } else {
-            showMessage(data.error, "error");
-          }
-        } catch (error) {
-          console.error("Error al enviar el formulario:", error);
-          showMessage("Error al enviar el formulario", "error");
-        }
-      });
+    const data = await response.json();
+    if (response.ok) {
+      showMessage(data.message, "info");
+      document.getElementById("registration-form").reset();
+
+      // Redirige a login.html después de 2 segundos
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 2000);
+    } else {
+      showMessage(data.error, "error");
+    }
+  } catch (error) {
+    console.error("Error al enviar el formulario:", error);
+    showMessage("Error al enviar el formulario", "error");
+  }
+});
+
+
+
 
       function showMessage(message, type) {
         const messageContainer = document.getElementById("message-container");
