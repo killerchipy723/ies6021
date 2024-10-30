@@ -16,15 +16,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-<<<<<<< HEAD
-// Configuración de sesión
-app.use(session({
-    secret: 'mi_secreto',
-    resave: false, 
-    saveUninitialized: true,
-    cookie: { secure: false } // Cambiar a true en HTTPS
-}));
-=======
+
+
 // Configuración de sesión con almacenamiento en MySQL y tiempo de expiración de una hora
 const sessionStore = new MySQLStore({}, db);
 app.use(
@@ -49,7 +42,7 @@ function verificarAutenticacion(req, res, next) {
         res.redirect('/login');
     }
 }
->>>>>>> 9362ce48fa7e95dd266617be06205a27afd653d9
+
 
 // Ruta para manejar el login
 app.post('/login', async (req, res) => {
