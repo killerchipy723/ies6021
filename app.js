@@ -6,7 +6,7 @@ const MySQLStore = require('express-mysql-session')(session);
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const mysql = require('mysql2/promise');
-const { isAuthenticated } = require('./public/middleware'); 
+
 
 const app = express();
 const port = 3000;
@@ -34,14 +34,17 @@ app.use(
     })
 );
 
-// Middleware para verificar autenticación en rutas protegidas
+
+
 function verificarAutenticacion(req, res, next) {
-    if (req.session.user) {
+    if (req.session.user || ['/portada', '/registro'].includes(req.path)) {
         next();
     } else {
         res.redirect('/login');
     }
 }
+
+app.use(verificarAutenticacion); // Aplica el middleware a todas las rutas
 
 
 // Ruta para manejar el login
@@ -229,6 +232,10 @@ app.post('/registro', async (req, res) => {
     }
 });
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0',() => {
     console.log(`Servidor corriendo en http://localhost:${port}`);
+});
+
+process.on('SIGTERM', () => {
+    console.log('Recibida señal de cierre, manteniendo el servidor activo.');
 });
