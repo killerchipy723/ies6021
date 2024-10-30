@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 // Configuración de sesión
 app.use(session({
     secret: 'mi_secreto',
-    resave: false,
+    resave: false, 
     saveUninitialized: true,
     cookie: { secure: false } // Cambiar a true en HTTPS
 }));
