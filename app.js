@@ -139,15 +139,22 @@ app.post('/send-reset-email', async (req, res) => {
     const { dni, email } = req.body;
 
     try {
-        const [user] = await db.query('SELECT * FROM alumno WHERE dni = ? AND correo = ?', [dni, email]);
+        const [users] = await db.query('SELECT * FROM alumno WHERE dni = ? AND correo = ?', [dni, email]);
 
-        if (user.length === 0) {
+        // Verificar si no se encontró ningún usuario
+        if (!users || users.length === 0) {
             return res.status(404).json({ message: 'No se encontró un usuario con ese DNI y correo electrónico.' });
         }
 
-        const token = crypto.randomBytes(20).toString('hex');
-        await db.query('UPDATE alumno SET reset_token = ?, reset_token_expires = ? WHERE idalumno = ?', [token, new Date(Date.now() + 3600000), user[0].idalumno]);
+        // Si existe el usuario, seleccionamos el primer elemento
+        const user = users[0];
 
+        // Generar el token y actualizar en la base de datos
+        const token = crypto.randomBytes(20).toString('hex');
+        await db.query('UPDATE alumno SET reset_token = ?, reset_token_expires = ? WHERE idalumno = ?', 
+            [token, new Date(Date.now() + 3600000), user.idalumno]);
+
+        // Configurar el mensaje para el correo electrónico
         const message = {
             text: `Aquí está el enlace para restablecer su contraseña: http://181.89.27.48:3000/reset-password?token=${token}`,
             from: 'ies6.021jc@gmail.com',
@@ -155,9 +162,10 @@ app.post('/send-reset-email', async (req, res) => {
             subject: 'Restablecimiento de Contraseña'
         };
 
+        // Enviar el correo
         transporter.sendMail(message, (err, info) => {
             if (err) {
-                console.log(err);
+                console.error('Error al enviar el correo:', err);
                 return res.status(500).json({ message: 'Error al enviar el correo electrónico.' });
             }
             return res.status(200).json({ message: 'Se ha enviado un enlace de restablecimiento de contraseña a su correo electrónico.' });
@@ -167,6 +175,8 @@ app.post('/send-reset-email', async (req, res) => {
         res.status(500).json({ message: 'Error al procesar la solicitud de restablecimiento.' });
     }
 });
+
+
 
 // Ruta para restablecer la contraseña
 app.get('/reset-password', async (req, res) => {
@@ -218,7 +228,7 @@ app.post('/registro', async (req, res) => {
         const [existingStudents] = await db.query('SELECT * FROM alumno WHERE dni = ?', [dni1]);
 
         if (existingStudents.length > 0) {
-            return res.status(400).json({ message: 'El alumno ya se encuentra registrado.' });
+            return res.status(400).json({ message: 'El Alumno ya se encuentra registrado.' });
         }
 
         await db.query(
@@ -232,6 +242,7 @@ app.post('/registro', async (req, res) => {
         res.status(500).json({ message: 'Error al insertar datos en la base de datos.' });
     }
 });
+
 
 app.listen(port, '0.0.0.0',() => {
     console.log(`Servidor corriendo en http://localhost:${port}`);
