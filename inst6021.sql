@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-10-2024 a las 18:18:05
--- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.0.28
+-- Tiempo de generación: 01-11-2024 a las 11:38:36
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -42,19 +42,6 @@ CREATE TABLE `alumno` (
   `reset_token` varchar(200) NOT NULL,
   `reset_token_expires` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `alumno`
---
-
-INSERT INTO `alumno` (`idalumno`, `dni`, `cuil`, `apellidos`, `nombres`, `fechanac`, `localidad`, `correo`, `clave`, `telefono`, `acuerdo`, `reset_token`, `reset_token_expires`) VALUES
-(1, 31840303, '27-31840303-7', 'Alderete', 'Diego Eduardo', '1986-04-04', 'Rio Piedras', 'diegoeduardo66@gmail.com', 'killer', '3876502243', 'Aceptado', 'c8580ceed138be22e3b31c5b89a20407e4b6b699', '2024-10-30 16:11:29'),
-(2, 32723694, '27-32723694-0', 'Herrera', 'Irene Del Carmen', '1987-07-11', 'Rio Piedras', '', '', '3876507262', 'Aceptado', '', '2024-10-29 13:05:30'),
-(3, 50008803, '20-50008803-3', 'Rojas', 'Damian Federico', '1999-10-22', 'El Galpon', '', '', '3876507262', 'Aceptado', '', '2024-10-29 13:05:30'),
-(4, 16806431, '27-16806431-6', 'Torres', 'Maria Teresa', '1968-02-17', 'Rio Piedras', 'titatorres@gmail.com', 'tita123', '3876411544', 'Aceptado', '', '2024-10-29 13:05:30'),
-(5, 31840303, '27-31840303-7', 'Alderete', 'Diego', '1999-02-02', 'Rio Piedras', 'diegoeduardo66@gmail.com', 'admin', '3876502243', 'Aceptado', '', '2024-10-29 13:05:30'),
-(6, 31840303, '27-31840303-7', 'Alderete', 'Diego', '1986-04-04', 'Rio Piedras', 'diegoeduardo66@gmail.com', 'admin', '3876502243', 'Aceptado', '', '2024-10-29 13:05:30'),
-(7, 13894069, '20-13894069-5', 'Alderete', 'Mario Eduardo', '1960-02-12', 'Lumbreras', 'marioealderete@gmail.com', 'admin', '3876441323', 'Aceptado', '', '2024-10-30 10:58:22');
 
 -- --------------------------------------------------------
 
@@ -152,6 +139,13 @@ CREATE TABLE `sessions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Volcado de datos para la tabla `sessions`
+--
+
+INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
+('aEopko17I66__JrhIXQU6j6RWet3kUum', 1730460791, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2024-11-01T11:33:11.270Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"user\":{\"idalumno\":1,\"dni\":31840303,\"correo\":\"diegoeduardo66@gmail.com\",\"nombres\":\"DIEGO EDUARDO\",\"apellidos\":\"ALDERETE\"}}');
+
+--
 -- Índices para tablas volcadas
 --
 
@@ -195,7 +189,7 @@ ALTER TABLE `sessions`
 -- AUTO_INCREMENT de la tabla `alumno`
 --
 ALTER TABLE `alumno`
-  MODIFY `idalumno` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `idalumno` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `carrera`
