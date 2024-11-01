@@ -78,7 +78,7 @@ app.post('/login', async (req, res) => {
 });
 
 // Ruta protegida para obtener datos del alumno
-app.get('/datos-alumno', verificarAutenticacion, (req, res) => {
+app.get('/datos-alumno',  (req, res) => {
     const { idalumno } = req.session.user;
 
     const query = 'SELECT idalumno, apellidos, nombres, dni, cuil, localidad, telefono FROM alumno WHERE idalumno = ?';
@@ -98,9 +98,11 @@ app.get('/datos-alumno', verificarAutenticacion, (req, res) => {
 
 // Ruta protegida para mostrar el nombre del alumno que se logueó
 app.get('/portada', verificarAutenticacion, (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'portada.html'));
-    const nombreCompleto = `${req.session.user.apellidos} ${req.session.user.nombres}`;
-    //res.render('portada', { nombreCompleto });  // Asegúrate de tener 'portada.ejs' en la carpeta de vistas
+    res.sendFile(path.join(__dirname, 'views', 'portada.html'));
+});
+
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
 // Ruta protegida para obtener las carreras activas
@@ -118,13 +120,20 @@ app.get('/carreras', verificarAutenticacion, async (req, res) => {
 
 // Ruta para cerrar sesión
 app.get('/logout', (req, res) => {
+    // Destruir la sesión en el servidor
     req.session.destroy(err => {
         if (err) {
             return res.status(500).send('Error al cerrar la sesión');
         }
+
+        // Limpiar cookies específicas en el cliente
+        res.clearCookie('connect.sid'); // Cambia 'connect.sid' al nombre de tu cookie de sesión si es diferente
+
+        // Redirigir al usuario a la página de inicio de sesión
         res.redirect('/login');
     });
 });
+
 
 // Ruta para restablecimiento de contraseña
 const transporter = nodemailer.createTransport({

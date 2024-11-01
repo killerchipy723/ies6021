@@ -56,7 +56,7 @@
     if (response.ok) {
         // Guardar el nombre del usuario en sessionStorage
         sessionStorage.setItem('nombreCompleto', result.nombreCompleto);
-        window.location.href = '/portada.html';
+        window.location.href = '/portada';
         loadDatosAlumno();
     } else {
         const errorMessage = document.getElementById('error-message');
