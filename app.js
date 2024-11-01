@@ -66,7 +66,7 @@ app.post('/login', async (req, res) => {
                 apellidos: user[0].apellidos
             };
 
-            const nombreCompleto = `${user[0].apellidos} ${user[0].nombres}`;
+            const nombreCompleto = `${user[0].apellidos}, ${user[0].nombres}`;
             return res.status(200).json({ success: true, nombreCompleto });
         } else {
             return res.status(401).json({ success: false, message: 'DNI o contraseña incorrectos.' });
