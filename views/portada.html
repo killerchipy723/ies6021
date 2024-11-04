@@ -25,7 +25,7 @@
     <nav class="container mt-3">
         <ul class="nav nav-pills justify-content-center">
             <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('propuestas')">Ver Propuestas Académicas</a></li>
-            <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('disponibilidad')">Consultar Disponibilidad</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('disponibilidad')">Consulta Estado de Preinscripciónes</a></li>
             <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('preinscripcion')">Pre-Inscripción a Carreras</a></li>
         </ul>
     </nav>
@@ -68,7 +68,7 @@
                         <th>Alumno</th>
                         <th>DNI</th>
                         <th>Carrera</th>
-                        <th>Fecha</th>
+                        <th>Fecha y Hora  de Insc.</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -302,43 +302,33 @@ document.getElementById('darDeBaja').addEventListener('click', async () => {
 
 // Insertar inscripcion de alumno 
 
-document.getElementById('enviarInscripcion').addEventListener('click', async (event) => {
-    event.preventDefault();
+document.getElementById('enviarInscripcion').addEventListener('click', async () => {
+    const idAlumno = document.getElementById('idAlumno').value;
+    const idCarrera = document.getElementById('carrera').value;
 
-    const dni = document.getElementById('dni').innerText; // DNI desde el frontend
-    const idCarrera = document.getElementById('carrera').value; // ID de carrera seleccionado
+    if (!idCarrera) {
+        alert('Seleccione una carrera');
+        return;
+    }
 
-    // Llama a la ruta de verificación antes de realizar la inscripción
-    const response = await fetch(`/inscripciones/verificar/${dni}/${idCarrera}`);
-    const data = await response.json();
+    try {
+        const response = await fetch('/inscripciones/nueva', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idAlumno, idCarrera })
+        });
 
-    if (!data.puedeInscribirse) {
-        // Muestra el mensaje de advertencia si ya está inscrito en otra carrera
-        alert(data.mensaje);
-    } else {
-        // Procede a la inscripción si no hay otra inscripción activa
-        realizarInscripcion(idCarrera);
+        const result = await response.json();
+        if (result.success) {
+            alert('Inscripción realizada exitosamente');
+            location.reload();
+        } else {
+            alert('Error al realizar la inscripción');
+        }
+    } catch (error) {
+        console.error('Error en el proceso de inscripción:', error);
     }
 });
-
-async function realizarInscripcion(idCarrera) {
-    // Lógica para enviar la solicitud de inscripción
-    const response = await fetch('/inscripciones/nueva', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ idCarrera })
-    });
-
-    const result = await response.json();
-    if (result.success) {
-        alert(result.message);
-        location.reload(); // Recarga la página después de la inscripción
-    } else {
-        alert('Error al realizar la inscripción.');
-    }
-}
 
 
 

@@ -166,7 +166,7 @@ app.post('/send-reset-email', async (req, res) => {
 
         // Configurar el mensaje para el correo electrónico
         const message = {
-            text: `Aquí está el enlace para restablecer su contraseña: http://localhost:3000/reset-password?token=${token}`,
+            text: `Aquí está el enlace para restablecer su contraseña: http://http://181.89.27.41:3000/reset-password?token=${token}`,
             from: 'ies6.021jc@gmail.com',
             to: email,
             subject: 'Restablecimiento de Contraseña'
@@ -352,12 +352,10 @@ app.get('/inscripciones/verificar/:dni/:idCarrera', async (req, res) => {
     try {
         const [inscripciones] = await db.query(
             `SELECT COUNT(*) AS total 
-             FROM preinscripcion i 
-             JOIN alumno a ON a.idalumno = i.idalumno 
-             WHERE a.dni = ? 
-             AND i.estado = 'Preinscripto' 
-             AND i.idcarrera <> ?`, 
-            [dni, idCarrera]
+             FROM preinscripcion WHERE idalumno = ? 
+             AND estado = 'Preinscripto' 
+             `, 
+            [dni, estado]
         );
 
         if (inscripciones[0].total > 0) {
