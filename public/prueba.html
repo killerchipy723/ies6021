@@ -13,14 +13,13 @@
   </head>
   <body>
     <header class="header">
-      
+      <button class="button-start" onclick="window.location.href='index.html'">
+        <i class="fas fa-home"></i> Inicio
+      </button>
       <h3 class="title">
         Instituto de Educación Superior N° 6.021 Juan Carlos Dávalos
       </h3>
     </header>
-    <button class="button-start" onclick="window.location.href='index.html'">
-      <i class="fas fa-home"></i> Inicio
-    </button>
 
     <div class="form-container">
       <h2>Registro de Alumnos</h2>
@@ -97,7 +96,7 @@
     
         <div class="form-row">
           <div class="form-group">
-            <label for="telefono">Teléfono (Sin 0 ni 15)</label>
+            <label for="telefono">Teléfono</label>
             <input type="number" id="telefono" name="telefono" required />
           </div>
           <div class="form-group">
@@ -130,129 +129,132 @@
       reservados.
     </footer>
 
-    <div class="message-container" id="message-container" style="display: none;"></div>
-
-
     <script>
       function capitalize(input) {
-          input.value = input.value.toUpperCase();
-      }
-  
+    input.value = input.value.toUpperCase();
+}
+
+
       function formatCuil(input) {
-          let value = input.value.replace(/\D/g, "");
-          if (value.length > 11) value = value.slice(0, 11);
-  
-          if (value.length > 10) {
-              value = `${value.slice(0, 2)}-${value.slice(2, 10)}-${value.slice(10, 11)}`;
-          } else if (value.length > 2) {
-              value = `${value.slice(0, 2)}-${value.slice(2)}`;
-          }
-          input.value = value;
+        let value = input.value.replace(/\D/g, "");
+        if (value.length > 11) value = value.slice(0, 11);
+
+        if (value.length > 10) {
+          value = `${value.slice(0, 2)}-${value.slice(2, 10)}-${value.slice(
+            10,
+            11
+          )}`;
+        } else if (value.length > 2) {
+          value = `${value.slice(0, 2)}-${value.slice(2)}`;
+        }
+        input.value = value;
       }
-  
+
       function toggleSubmitButton() {
-          const checkBox = document.getElementById("acuerdo");
-          const submitButton = document.getElementById("submit-button");
-          submitButton.disabled = !checkBox.checked;
+        const checkBox = document.getElementById("acuerdo");
+        const submitButton = document.getElementById("submit-button");
+        submitButton.disabled = !checkBox.checked;
       }
-  
+
       document.getElementById("registration-form").addEventListener("submit", async (event) => {
-          event.preventDefault();
-  
-          const dni1 = document.getElementById("dni1").value;
-          const dni2 = document.getElementById("dni2").value;
-          const clave1 = document.getElementById("clave1").value;
-          const clave2 = document.getElementById("clave2").value;
-  
-          if (dni1 !== dni2) {
-              showMessage("Los DNI no coinciden. Por favor, verifica e inténtalo de nuevo.", "error");
-              return;
-          }
-  
-          if (clave1 !== clave2) {
-              showMessage("Las contraseñas no coinciden. Por favor, verifica e inténtalo de nuevo.", "error");
-              return;
-          }
-  
-          // Obtener los valores del día, mes y año para construir la fecha de nacimiento
-          const day = document.getElementById("day").value;
-          const month = document.getElementById("month").value;
-          const year = document.getElementById("year").value;
-  
-          if (!day || !month || !year) {
-              showMessage("Por favor, selecciona una fecha completa de nacimiento.", "error");
-              return;
-          }
-  
-          // Concatenar fecha en formato YYYY-MM-DD
-          const fechanac = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-  
-          const confirmation = confirm("Por favor, verifica los datos ingresados. Si algún dato está cargado de manera errónea, se dará de baja.");
-          if (!confirmation) return;
-  
-          try {
-              const response = await fetch("/registro", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                      dni1,
-                      dni2,
-                      cuil: document.getElementById("cuil").value,
-                      apellidos: document.getElementById("apellidos").value,
-                      nombres: document.getElementById("nombres").value,
-                      fechanac,  // Fecha de nacimiento en formato YYYY-MM-DD
-                      localidad: document.getElementById("localidad").value,
-                      correo: document.getElementById("correo").value,
-                      telefono: document.getElementById("telefono").value,
-                      clave1,
-                      clave2,
-                  }),
-              });
-  
-              const data = await response.json();
-              if (response.ok) {
-                  showMessage(data.message, "info");
-                  document.getElementById("registration-form").reset();
-  
-                  // Redirige a login.html después de 2 segundos
-                  setTimeout(() => {
-                      window.location.href = "login.html";
-                  }, 2000);
-              } else {
-                  showMessage(data.message || "Error desconocido", "error"); // Cambiado a data.message
-              }
-          } catch (error) {
-              console.error("Error al enviar el formulario:", error);
-              showMessage("Error al enviar el formulario", "error");
-          }
-      });
-  
+    event.preventDefault();
+
+    const dni1 = document.getElementById("dni1").value;
+    const dni2 = document.getElementById("dni2").value;
+    const clave1 = document.getElementById("clave1").value;
+    const clave2 = document.getElementById("clave2").value;
+
+    if (dni1 !== dni2) {
+        showMessage("Los DNI no coinciden. Por favor, verifica e inténtalo de nuevo.", "error");
+        return;
+    }
+
+    if (clave1 !== clave2) {
+        showMessage("Las contraseñas no coinciden. Por favor, verifica e inténtalo de nuevo.", "error");
+        return;
+    }
+
+    // Obtener los valores del día, mes y año para construir la fecha de nacimiento
+    const day = document.getElementById("day").value;
+    const month = document.getElementById("month").value;
+    const year = document.getElementById("year").value;
+
+    if (!day || !month || !year) {
+        showMessage("Por favor, selecciona una fecha completa de nacimiento.", "error");
+        return;
+    }
+
+    // Concatenar fecha en formato YYYY-MM-DD
+    const fechanac = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+    const confirmation = confirm("Por favor, verifica los datos ingresados. Si algún dato está cargado de manera errónea, se dará de baja.");
+    if (!confirmation) return;
+
+    try {
+        const response = await fetch("/registro", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                dni1,
+                dni2,
+                cuil: document.getElementById("cuil").value,
+                apellidos: document.getElementById("apellidos").value,
+                nombres: document.getElementById("nombres").value,
+                fechanac,  // Fecha de nacimiento en formato YYYY-MM-DD
+                localidad: document.getElementById("localidad").value,
+                correo: document.getElementById("correo").value,
+                telefono: document.getElementById("telefono").value,
+                clave1,
+                clave2,
+            }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            showMessage(data.message, "info");
+            document.getElementById("registration-form").reset();
+
+            // Redirige a login.html después de 2 segundos
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 2000);
+        } else {
+            showMessage(data.error, "error");
+        }
+    } catch (error) {
+        console.error("Error al enviar el formulario:", error);
+        showMessage("Error al enviar el formulario", "error");
+    }
+});
+
+
       function showMessage(message, type) {
-          const messageContainer = document.getElementById("message-container");
-          messageContainer.style.display = "block";
-          messageContainer.textContent = message;
-          messageContainer.className = type === "error" ? "text-danger" : "text-success"; // Cambia según tu estilo
+        const messageContainer = document.getElementById("message-container");
+        messageContainer.style.display = "block";
+        messageContainer.textContent = message;
+        messageContainer.className =
+          type === "error" ? "error-message" : "info-message";
       }
-  
+
       // Rellenar días
-      const daySelect = document.getElementById("day");
-      for (let day = 1; day <= 31; day++) {
-          const option = document.createElement("option");
-          option.value = day;
-          option.textContent = day;
-          daySelect.appendChild(option);
-      }
-  
-      // Rellenar años (últimos 100 años)
-      const yearSelect = document.getElementById("year");
-      const currentYear = new Date().getFullYear();
-      for (let year = currentYear - 70; year <= currentYear; year++) {
-          const option = document.createElement("option");
-          option.value = year;
-          option.textContent = year;
-          yearSelect.appendChild(option);
-      }
-  </script>
-  
+const daySelect = document.getElementById("day");
+for (let day = 1; day <= 31; day++) {
+  const option = document.createElement("option");
+  option.value = day;
+  option.textContent = day;
+  daySelect.appendChild(option);
+}
+
+// Rellenar años (últimos 100 años)
+const yearSelect = document.getElementById("year");
+const currentYear = new Date().getFullYear();
+for (let year = currentYear - 100; year <= currentYear; year++) {
+  const option = document.createElement("option");
+  option.value = year;
+  option.textContent = year;
+  yearSelect.appendChild(option);
+}
+
+    </script>
   </body>
 </html>

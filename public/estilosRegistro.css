@@ -25,7 +25,6 @@
   }
   
   .button-start {
-
     position: absolute;
     left: 20px;
     top: 20px;
@@ -35,7 +34,17 @@
     border: solid 1px #ffff;
     border-radius: 8px;
     cursor: pointer;
-  }
+    max-width: 150px; /* Limita el ancho máximo */
+    flex-shrink: 0; /* Evita que se reduzca */
+}
+
+@media (max-width: 600px) {
+    .button-start {
+        position: relative; /* Cambia a relativo en pantallas pequeñas */
+        margin-bottom: 20px; /* Agrega espacio debajo del botón */
+        width: 100%; /* Asegura que el botón ocupe el 100% del ancho disponible */
+    }
+}
 
 body {
     font-family: 'Roboto', sans-serif;
@@ -185,6 +194,8 @@ footer {
     margin-bottom: 15px;
     border-radius: 5px;
     padding: 10px;
+    text-align: center;
+    font-size: 1.2em;
 }
 
 .info-message {
@@ -207,4 +218,24 @@ footer {
     border-radius: 5px;
     border: 1px solid #ccc;
   }
+  .message-container {
+    margin: 10px 0;
+    padding: 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: center;
+}
+
+.text-danger {
+    color: red;
+    background-color: #f8d7da;
+}
+
+.text-success {
+    color: green;
+    background-color: #d4edda;
+}
+
   
