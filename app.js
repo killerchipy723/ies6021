@@ -271,7 +271,7 @@ app.get('/inscripciones', async (req, res) => {
              FROM preinscripcion i
              JOIN alumno a ON a.idalumno = i.idalumno
              JOIN carreras c ON c.idcarrera = i.idcarrera
-             WHERE a.dni = ?`,
+             WHERE a.dni = ? AND i.estado = 'Preinscripto'`,
             [dni]
         );
 
@@ -287,6 +287,31 @@ app.get('/inscripciones', async (req, res) => {
         return res.status(500).json({ message: 'Error al obtener inscripciones' });
     }
 });
+
+
+/// DAR BAJA A UNA INSCRIPCION DE CARRERA
+
+app.put('/inscripciones/baja/:idinscripcion', async (req, res) => {
+    const { idinscripcion } = req.params;
+
+    try {
+        // Actualizar el estado de la inscripción a "Baja"
+        const [result] = await db.query(
+            `UPDATE preinscripcion SET estado = 'Baja' WHERE idinscripcion = ?`,
+            [idinscripcion]
+        );
+
+        if (result.affectedRows > 0) {
+            res.status(200).json({ success: true, message: 'Inscripción dada de baja correctamente.' });
+        } else {
+            res.status(404).json({ success: false, message: 'Inscripción no encontrada.' });
+        }
+    } catch (error) {
+        console.error('Error al dar de baja la inscripción:', error);
+        res.status(500).json({ success: false, message: 'Error al dar de baja la inscripción' });
+    }
+});
+
 
 
 

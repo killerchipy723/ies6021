@@ -59,7 +59,8 @@
             <h2>Consultar tus Preinscripciones</h2>
             <p>Aquí puedes consultar el estado de tus preinscripciones.</p>
             <button class="btn btn-primary" id="consultarDisponibilidad">Consultar</button>
-            
+            <button class="btn btn-danger" id="darDeBaja" style="display: none;">Dar de Baja</button>
+        
             <table id="tablaInscripciones" style="display: none; width: 100%;">
                 <thead>
                     <tr>
@@ -75,6 +76,7 @@
                 </tbody>
             </table>
         </section>
+        
         
 
         <section id="preinscripcion" style="display: none;">
@@ -125,6 +127,28 @@
         </section>
         
     </main>
+
+    <!-- Modal -->
+<div class="modal fade" id="mensajeModal" tabindex="-1" role="dialog" aria-labelledby="mensajeModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="mensajeModalLabel">Atención</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="mensajeModalBody">
+        <!-- Mensaje se insertará aquí -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" id="modalAceptar">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
     <footer class="text-center p-3 mt-4">
         <p>&copy; 2024 Instituto de Educación Superior N° 6021 Juan Carlos Dávalos. Todos los derechos reservados.</p>
@@ -257,6 +281,70 @@ document.getElementById('consultarDisponibilidad').addEventListener('click', fun
             alert('Ocurrió un error al consultar la disponibilidad.');
         });
 });
+
+// Mostrar inscripciones al hacer clic en "Consultar"
+document.getElementById('consultarDisponibilidad').addEventListener('click', async () => {
+    try {
+        // Realiza la consulta de inscripciones (implementación existente)
+        const response = await fetch('/inscripciones');
+        const data = await response.json();
+
+        // Verifica si hay inscripciones
+        if (data.success && data.inscripciones.length > 0) {
+            // Muestra la tabla y el botón "Dar de Baja"
+            document.getElementById('tablaInscripciones').style.display = 'table';
+            document.getElementById('darDeBaja').style.display = 'inline-block';
+
+            // Agrega las inscripciones a la tabla
+            const tbody = document.getElementById('tablaInscripciones').querySelector('tbody');
+            tbody.innerHTML = ''; // Limpia cualquier dato previo
+            data.inscripciones.forEach((inscripcion) => {
+                const row = `<tr>
+                                <td>${inscripcion.idinscripcion}</td>
+                                <td>${inscripcion.Alumno}</td>
+                                <td>${inscripcion.dni}</td>
+                                <td>${inscripcion.Carrera}</td>
+                                <td>${inscripcion.fecha}</td>
+                            </tr>`;
+                tbody.innerHTML += row;
+            });
+        } else {
+            alert('No se encontraron inscripciones.');
+            document.getElementById('darDeBaja').style.display = 'none'; // Oculta el botón si no hay resultados
+        }
+    } catch (error) {
+        console.error('Error al consultar inscripciones:', error);
+    }
+});
+
+// Al hacer clic en "Dar de Baja"
+document.getElementById('darDeBaja').addEventListener('click', async () => {
+    const idInscripcion = document.querySelector('#tablaInscripciones tbody tr td:first-child').innerText;
+    
+    if (confirm('¿Desea darse de baja de la inscripción?')) {
+        try {
+            const response = await fetch(`/inscripciones/baja/${idInscripcion}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert('La inscripción ha sido dada de baja.');
+                // Refresca la página actual (portada.html)
+                window.location.reload();
+            } else {
+                alert('Error al dar de baja la inscripción.');
+            }
+        } catch (error) {
+            console.error('Error al dar de baja la inscripción:', error);
+            alert('Hubo un problema al intentar dar de baja la inscripción.');
+        }
+    }
+});
+
+
+
 
 
         window.onload = () => {

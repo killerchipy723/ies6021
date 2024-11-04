@@ -286,4 +286,11 @@ footer {
         border-bottom-right-radius: 8px;
     }
 
+    .custom-line {
+        border: 0;
+        height: 2px;
+        background-color: #007bff;
+        margin: 20px 0;
+    }
+
     
