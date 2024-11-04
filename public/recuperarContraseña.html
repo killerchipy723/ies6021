@@ -27,10 +27,8 @@
             </span>
             <input type="email" class="form-control" id="email" name="email" placeholder="Correo Electrónico" required>
         </div>
-        <button type="submit" class="btn btn-custom w-100">Enviar Enlace</button>
+        <button type="submit" class="btn btn-custom w-100" id="submitBtn">Enviar Enlace</button>
         <button type="button" onclick="window.location.href='./index.html'" class="btn btn-custom w-100">Volver</button>
-
-
     </form>
 </div>
 
@@ -42,6 +40,10 @@
 
         const dni = document.getElementById('dni').value;
         const email = document.getElementById('email').value;
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Deshabilitar el botón de envío
+        submitBtn.disabled = true;
 
         // Realizar solicitud POST
         const response = await fetch('/send-reset-email', {
@@ -54,14 +56,18 @@
         
         // Mostrar mensaje de éxito o error
         const messageDiv = document.getElementById('message');
-        if (response.ok) {
-            messageDiv.textContent = result.message;
-            messageDiv.className = "text-success"; // Cambiar a texto de éxito
-        } else {
-            messageDiv.textContent = result.message;
-            messageDiv.className = "text-danger"; // Cambiar a texto de error
-        }
+        messageDiv.textContent = result.message;
+        messageDiv.className = response.ok ? "text-success" : "text-danger"; // Cambiar clase según el resultado
         messageDiv.style.display = 'block';
+
+        // Limpiar los campos de entrada si la respuesta es exitosa
+        if (response.ok) {
+            document.getElementById('dni').value = '';
+            document.getElementById('email').value = '';
+        }
+
+        // Habilitar el botón de envío nuevamente
+        submitBtn.disabled = false;
     });
 </script>
 </body>

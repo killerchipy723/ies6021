@@ -165,7 +165,7 @@ app.post('/send-reset-email', async (req, res) => {
 
         // Configurar el mensaje para el correo electrónico
         const message = {
-            text: `Aquí está el enlace para restablecer su contraseña: http://181.89.27.48:3000/reset-password?token=${token}`,
+            text: `Aquí está el enlace para restablecer su contraseña: http://localhost:3000/reset-password?token=${token}`,
             from: 'ies6.021jc@gmail.com',
             to: email,
             subject: 'Restablecimiento de Contraseña'
