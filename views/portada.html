@@ -79,76 +79,33 @@
         
         
 
-        <section id="preinscripcion" style="display: none;">
+        <section id="preinscripcion">
             <h2>Preinscripciones a Carreras</h2>
             <p>Formulario de Preinscripción</p>
         
             <div class="card mt-4">
-                <div class="card-header">
-                    <h5>Datos del Alumno</h5>
-                </div>
                 <div class="card-body">
-                    <!-- Panel de Datos del Alumno -->
-                    <div id="datos-alumno">
-                        <div class="mb-3">
-                            <strong>Apellidos:</strong> <span id="apellidos">Juan Perez</span>
-                        </div>
-                        <div class="mb-3">
-                            <strong>Nombres:</strong> <span id="nombres">Juan</span>
-                        </div>
-                        <div class="mb-3">
-                            <strong>Cuil:</strong> <span id="cuil">20-12345678-9</span>
-                        </div>
-                        <div class="mb-3">
-                            <strong>DNI:</strong> <span id="dni">12345678</span>
-                        </div>
-                        <div class="mb-3">
-                            <strong>Localidad:</strong> <span id="localidad">San Miguel de Tucumán</span>
-                        </div>
-                        <div class="mb-3">
-                            <strong>Teléfono:</strong> <span id="telefono">3815555555</span>
-                        </div>
-                        <hr>
-                    </div>
-        
-                    <!-- Selector de Carrera -->
                     <div class="mb-3">
                         <label for="carrera" class="form-label">Seleccionar Carrera:</label>
                         <select class="form-select" id="carrera" required>
                             <option value="" disabled selected>Seleccione una carrera</option>
-                            <!-- Opciones de carrera a llenar dinámicamente -->
+                            <!-- Opciones de carrera aquí -->
                         </select>
                     </div>
-                    
-                    <!-- Botón de Envío -->
-                    <button type="submit" class="btn btn-primary">Enviar Preinscripción</button>
+        
+                    <!-- Campo oculto para idAlumno -->
+                    <input type="hidden" id="idAlumno" value="<%= idAlumno %>">
+        
+                    <!-- Botón para enviar la inscripción -->
+                    <button type="button" class="btn btn-primary" id="enviarInscripcion">Enviar Preinscripción</button>
                 </div>
             </div>
         </section>
         
+        
     </main>
 
-    <!-- Modal -->
-<div class="modal fade" id="mensajeModal" tabindex="-1" role="dialog" aria-labelledby="mensajeModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="mensajeModalLabel">Atención</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body" id="mensajeModalBody">
-        <!-- Mensaje se insertará aquí -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" id="modalAceptar">Aceptar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
+    
 
     <footer class="text-center p-3 mt-4">
         <p>&copy; 2024 Instituto de Educación Superior N° 6021 Juan Carlos Dávalos. Todos los derechos reservados.</p>
@@ -342,6 +299,47 @@ document.getElementById('darDeBaja').addEventListener('click', async () => {
         }
     }
 });
+
+// Insertar inscripcion de alumno 
+
+document.getElementById('enviarInscripcion').addEventListener('click', async (event) => {
+    event.preventDefault();
+
+    const dni = document.getElementById('dni').innerText; // DNI desde el frontend
+    const idCarrera = document.getElementById('carrera').value; // ID de carrera seleccionado
+
+    // Llama a la ruta de verificación antes de realizar la inscripción
+    const response = await fetch(`/inscripciones/verificar/${dni}/${idCarrera}`);
+    const data = await response.json();
+
+    if (!data.puedeInscribirse) {
+        // Muestra el mensaje de advertencia si ya está inscrito en otra carrera
+        alert(data.mensaje);
+    } else {
+        // Procede a la inscripción si no hay otra inscripción activa
+        realizarInscripcion(idCarrera);
+    }
+});
+
+async function realizarInscripcion(idCarrera) {
+    // Lógica para enviar la solicitud de inscripción
+    const response = await fetch('/inscripciones/nueva', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ idCarrera })
+    });
+
+    const result = await response.json();
+    if (result.success) {
+        alert(result.message);
+        location.reload(); // Recarga la página después de la inscripción
+    } else {
+        alert('Error al realizar la inscripción.');
+    }
+}
+
 
 
 

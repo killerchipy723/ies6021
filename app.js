@@ -67,6 +67,7 @@ app.post('/login', async (req, res) => {
             };
 
             const nombreCompleto = `${user[0].apellidos}, ${user[0].nombres}`;
+            const idalu = user[0].idalumno;
             return res.status(200).json({ success: true, nombreCompleto });
         } else {
             return res.status(401).json({ success: false, message: 'DNI o contraseña incorrectos.' });
@@ -260,6 +261,36 @@ app.get('/inscripciones', async (req, res) => {
         return res.status(401).json({ message: 'Usuario no autenticado' });
     }
 
+    const idalu = app.post('/login', async (req, res) => {
+    const { dni, password } = req.body;
+
+    try {
+        const [user] = await db.query(
+            'SELECT * FROM alumno WHERE (dni = ? OR correo = ?) AND clave = ?',
+            [dni, dni, password]
+        );
+
+        if (user.length > 0) {
+            req.session.user = {
+                idalumno: user[0].idalumno,
+                dni: user[0].dni,
+                correo: user[0].correo,
+                nombres: user[0].nombres,
+                apellidos: user[0].apellidos
+            };
+
+            const nombreCompleto = `${user[0].apellidos}, ${user[0].nombres}`;
+            const idalu = user[0].idalumno;
+            return res.status(200).json({ success: true, nombreCompleto });
+        } else {
+            return res.status(401).json({ success: false, message: 'DNI o contraseña incorrectos.' });
+        }
+    } catch (error) {
+        console.error('Error en la autenticación:', error);
+        return res.status(500).json({ message: 'Error en la autenticación' });
+    }
+}); 
+
     const dni = req.session.user.dni;
     console.log("DNI recibido en el backend:", dni); // Verifica el DNI
 
@@ -311,6 +342,79 @@ app.put('/inscripciones/baja/:idinscripcion', async (req, res) => {
         res.status(500).json({ success: false, message: 'Error al dar de baja la inscripción' });
     }
 });
+
+//VERIFICAR SI EL ALUMNO ESTA INSCRIPTO CON INSCRIPCION ACTIVA
+
+
+app.get('/inscripciones/verificar/:dni/:idCarrera', async (req, res) => {
+    const { dni, idCarrera } = req.params;
+
+    try {
+        const [inscripciones] = await db.query(
+            `SELECT COUNT(*) AS total 
+             FROM preinscripcion i 
+             JOIN alumno a ON a.idalumno = i.idalumno 
+             WHERE a.dni = ? 
+             AND i.estado = 'Preinscripto' 
+             AND i.idcarrera <> ?`, 
+            [dni, idCarrera]
+        );
+
+        if (inscripciones[0].total > 0) {
+            return res.json({ puedeInscribirse: false, mensaje: 'Ya tienes una inscripción activa en otra carrera.' });
+        } else {
+            return res.json({ puedeInscribirse: true });
+        }
+    } catch (error) {
+        console.error('Error al verificar inscripción:', error);
+        res.status(500).json({ puedeInscribirse: false, mensaje: 'Error al verificar inscripción' });
+    }
+});
+
+
+// ruta para obtener el id del alumno
+
+app.get('/preinscripcion', (req, res) => {
+    if (req.session.user) {
+        const idAlumno = req.session.user.idalumno;
+        res.render('preinscripcion', { idAlumno }); // Asegúrate de que esta vista se llama 'preinscripcion'
+    } else {
+        res.redirect('/login'); // Redirige al login si no está autenticado
+    }
+});
+
+
+
+/// GUARDAR LA INSCRIPCION DEL ALUMNO
+
+app.post('/inscripciones/nueva', async (req, res) => {
+    const { idCarrera } = req.body;
+    const idAlumno = req.session.user?.idalumno; // Tomar idAlumno de la sesión del usuario
+
+    if (!idAlumno || !idCarrera) {
+        return res.status(400).json({ success: false, message: 'Datos incompletos' });
+    }
+
+    // Formatear la fecha en el formato correcto
+    const fechaActual = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+    try {
+        const [result] = await db.query(
+            'INSERT INTO preinscripcion (idalumno, idcarrera, fecha) VALUES (?, ?, ?)',
+            [idAlumno, idCarrera, fechaActual]
+        );
+
+        res.status(200).json({ success: true, message: 'Inscripción realizada exitosamente' });
+    } catch (error) {
+        console.error('Error al realizar la inscripción:', error);
+        res.status(500).json({ success: false, message: 'Error al realizar la inscripción' });
+    }
+});
+
+
+
+
+
 
 
 
