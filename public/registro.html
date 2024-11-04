@@ -30,11 +30,11 @@
         <div class="form-row">
           <div class="form-group">
             <label for="dni1">DNI</label>
-            <input type="text" id="dni1" name="dni1" required oninput="capitalize(this)" />
+            <input type="text" id="dni1" name="dni1" required oninput="trimInput(this)" />
           </div>
           <div class="form-group">
             <label for="dni2">Repetir DNI</label>
-            <input type="text" id="dni2" name="dni2" required oninput="capitalize(this)" />
+            <input type="text" id="dni2" name="dni2" required oninput="trimInput(this)" />
           </div>
         </div>
     
@@ -91,7 +91,7 @@
           </div>
           <div class="form-group">
             <label for="correo">Correo Electrónico</label>
-            <input type="email" id="correo" name="correo" required />
+            <input type="email" id="correo" name="correo" required oninput="trimInput(this)" />
           </div>
         </div>
     
@@ -102,14 +102,14 @@
           </div>
           <div class="form-group">
             <label for="clave1">Contraseña</label>
-            <input type="password" id="clave1" name="clave1" required />
+            <input type="password" id="clave1" name="clave1" required oninput="trimInput(this)" />
           </div>
         </div>
     
         <div class="form-row">
           <div class="form-group">
             <label for="clave2">Repetir Contraseña</label>
-            <input type="password" id="clave2" name="clave2" required />
+            <input type="password" id="clave2" name="clave2" required oninput="trimInput(this)"/>
           </div>
           <div class="form-group">
             <label>

@@ -253,6 +253,43 @@ app.post('/registro', async (req, res) => {
 });
 
 
+// TABLA INSCRIPCIONES
+
+app.get('/inscripciones', async (req, res) => {
+    if (!req.session.user || !req.session.user.dni) {
+        return res.status(401).json({ message: 'Usuario no autenticado' });
+    }
+
+    const dni = req.session.user.dni;
+    console.log("DNI recibido en el backend:", dni); // Verifica el DNI
+
+    try {
+        const [inscripciones] = await db.query(
+            `SELECT i.idinscripcion, CONCAT(a.apellidos, ', ', a.nombres) AS Alumno, 
+                    a.dni, c.nombre AS Carrera, 
+                    DATE_FORMAT(i.fecha, '%d-%m-%Y %H:%i:%s') AS fecha
+             FROM preinscripcion i
+             JOIN alumno a ON a.idalumno = i.idalumno
+             JOIN carreras c ON c.idcarrera = i.idcarrera
+             WHERE a.dni = ?`,
+            [dni]
+        );
+
+        console.log("Resultado de la consulta:", inscripciones); // Verifica el resultado de la consulta
+
+        if (inscripciones.length > 0) {
+            return res.status(200).json({ success: true, inscripciones });
+        } else {
+            return res.status(200).json({ success: false, message: 'No se encontraron inscripciones para este usuario.' });
+        }
+    } catch (error) {
+        console.error('Error al obtener inscripciones:', error);
+        return res.status(500).json({ message: 'Error al obtener inscripciones' });
+    }
+});
+
+
+
 app.listen(port, '0.0.0.0',() => {
     console.log(`Servidor corriendo en http://localhost:${port}`);
 });
