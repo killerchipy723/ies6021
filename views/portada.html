@@ -60,21 +60,22 @@
             <p>Aquí puedes consultar el estado de tus preinscripciones.</p>
             <button class="btn btn-primary" id="consultarDisponibilidad">Consultar</button>
             <button class="btn btn-danger" id="darDeBaja" style="display: none;">Dar de Baja</button>
-        
-            <table id="tablaInscripciones" style="display: none; width: 100%;">
-                <thead>
-                    <tr>
-                        <th>ID Inscripción</th>
-                        <th>Alumno</th>
-                        <th>DNI</th>
-                        <th>Carrera</th>
-                        <th>Fecha y Hora  de Insc.</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Las filas de datos se añadirán aquí dinámicamente -->
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered" id="tablaInscripciones" style="display: none; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>ID Inscripción</th>
+                            <th>Alumno</th>
+                            <th>DNI</th>
+                            <th>Carrera</th>
+                            <th>Fecha y Hora  de Insc.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Las filas de datos se añadirán aquí dinámicamente -->
+                    </tbody>
+                </table>
+            </div>            
         </section>
         
         
