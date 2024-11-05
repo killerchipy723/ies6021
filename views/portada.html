@@ -301,10 +301,8 @@ document.getElementById('darDeBaja').addEventListener('click', async () => {
     }
 });
 
-// Insertar inscripcion de alumno 
-
+// Insertar inscripción de alumno
 document.getElementById('enviarInscripcion').addEventListener('click', async () => {
-    const idAlumno = document.getElementById('idAlumno').value;
     const idCarrera = document.getElementById('carrera').value;
 
     if (!idCarrera) {
@@ -316,20 +314,22 @@ document.getElementById('enviarInscripcion').addEventListener('click', async () 
         const response = await fetch('/inscripciones/nueva', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ idAlumno, idCarrera })
+            body: JSON.stringify({ idCarrera }) // Solo enviamos idCarrera
         });
 
         const result = await response.json();
         if (result.success) {
-            alert('Inscripción realizada exitosamente');
+            alert(result.message); // Muestra mensaje de éxito del backend
             location.reload();
         } else {
-            alert('Error al realizar la inscripción');
+            alert(result.message); // Muestra mensaje de error específico del backend
         }
     } catch (error) {
         console.error('Error en el proceso de inscripción:', error);
+        alert('Error en el proceso de inscripción');
     }
 });
+
 
 
 

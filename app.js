@@ -302,7 +302,7 @@ app.get('/inscripciones', async (req, res) => {
              FROM preinscripcion i
              JOIN alumno a ON a.idalumno = i.idalumno
              JOIN carreras c ON c.idcarrera = i.idcarrera
-             WHERE a.dni = ? AND i.estado = 'Preinscripto'`,
+             WHERE a.dni = ? AND i.estado = 'Activo'`,
             [dni]
         );
 
@@ -346,28 +346,53 @@ app.put('/inscripciones/baja/:idinscripcion', async (req, res) => {
 //VERIFICAR SI EL ALUMNO ESTA INSCRIPTO CON INSCRIPCION ACTIVA
 
 
-app.get('/inscripciones/verificar/:dni/:idCarrera', async (req, res) => {
-    const { dni, idCarrera } = req.params;
+app.post('/inscripciones/nueva', async (req, res) => {
+    const { idCarrera } = req.body;
+    const idAlumno = req.session.user?.idalumno;
+
+    if (!idAlumno || !idCarrera) {
+        return res.status(400).json({ success: false, message: 'Datos incompletos' });
+    }
+
+    // Formatear la fecha en el formato correcto
+    const fechaActual = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
     try {
-        const [inscripciones] = await db.query(
-            `SELECT COUNT(*) AS total 
-             FROM preinscripcion WHERE idalumno = ? 
-             AND estado = 'Preinscripto' 
-             `, 
-            [dni, estado]
+        // Verificar si el alumno ya tiene una inscripción en la carrera y su estado
+        const [existingInscription] = await db.query(
+            'SELECT estado FROM preinscripcion WHERE idalumno = ? AND idcarrera = ?',
+            [idAlumno, idCarrera]
         );
 
-        if (inscripciones[0].total > 0) {
-            return res.json({ puedeInscribirse: false, mensaje: 'Ya tienes una inscripción activa en otra carrera.' });
-        } else {
-            return res.json({ puedeInscribirse: true });
+        // Comprobar si ya hay una inscripción activa
+        if (existingInscription && existingInscription.length > 0 && existingInscription[0].estado !== 'Baja') {
+            return res.status(400).json({
+                success: false,
+                message: 'El alumno ya está inscrito en esta carrera'
+            });
         }
+
+        // Si el alumno no tiene inscripción activa, permitir la inscripción
+        await db.query(
+            'INSERT INTO preinscripcion (idalumno, idcarrera, fecha, estado) VALUES (?, ?, ?, ?)',
+            [idAlumno, idCarrera, fechaActual, 'Activo'] // Usar 'Activo' como estado inicial
+        );
+
+        res.status(200).json({
+            success: true,
+            message: 'Inscripción realizada exitosamente'
+        });
     } catch (error) {
-        console.error('Error al verificar inscripción:', error);
-        res.status(500).json({ puedeInscribirse: false, mensaje: 'Error al verificar inscripción' });
+        console.error('Error al realizar la inscripción:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al realizar la inscripción'
+        });
     }
 });
+
+
+
 
 
 // ruta para obtener el id del alumno
@@ -385,29 +410,7 @@ app.get('/preinscripcion', (req, res) => {
 
 /// GUARDAR LA INSCRIPCION DEL ALUMNO
 
-app.post('/inscripciones/nueva', async (req, res) => {
-    const { idCarrera } = req.body;
-    const idAlumno = req.session.user?.idalumno; // Tomar idAlumno de la sesión del usuario
 
-    if (!idAlumno || !idCarrera) {
-        return res.status(400).json({ success: false, message: 'Datos incompletos' });
-    }
-
-    // Formatear la fecha en el formato correcto
-    const fechaActual = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
-    try {
-        const [result] = await db.query(
-            'INSERT INTO preinscripcion (idalumno, idcarrera, fecha) VALUES (?, ?, ?)',
-            [idAlumno, idCarrera, fechaActual]
-        );
-
-        res.status(200).json({ success: true, message: 'Inscripción realizada exitosamente' });
-    } catch (error) {
-        console.error('Error al realizar la inscripción:', error);
-        res.status(500).json({ success: false, message: 'Error al realizar la inscripción' });
-    }
-});
 
 
 

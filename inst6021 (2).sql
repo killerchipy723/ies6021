@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-11-2024 a las 11:38:36
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.0.30
+-- Tiempo de generación: 05-11-2024 a las 11:48:27
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -57,32 +57,6 @@ CREATE TABLE `carrera` (
   `estado` varchar(50) NOT NULL DEFAULT 'Activo'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `carrera`
---
-
-INSERT INTO `carrera` (`idcarrera`, `nombre`, `tipo`, `duracion`, `estado`) VALUES
-(1, 0, 0, 0, ''),
-(2, 0, 0, 0, ''),
-(3, 0, 0, 0, ''),
-(4, 0, 0, 0, ''),
-(5, 0, 0, 0, ''),
-(6, 0, 0, 0, ''),
-(7, 0, 0, 0, ''),
-(8, 0, 0, 0, ''),
-(9, 0, 0, 0, ''),
-(10, 0, 0, 0, ''),
-(11, 1, 0, 0, '4'),
-(12, 2, 0, 0, '4'),
-(13, 3, 0, 0, '3'),
-(14, 4, 0, 0, '3'),
-(15, 5, 0, 0, '3'),
-(16, 6, 0, 0, '3'),
-(17, 7, 0, 0, '4'),
-(18, 8, 0, 0, '4'),
-(19, 9, 0, 0, '4'),
-(20, 0, 0, 0, '');
-
 -- --------------------------------------------------------
 
 --
@@ -123,7 +97,7 @@ CREATE TABLE `preinscripcion` (
   `idalumno` int(11) NOT NULL,
   `idcarrera` int(11) NOT NULL,
   `fecha` datetime NOT NULL,
-  `estado` varchar(20) NOT NULL
+  `estado` varchar(20) NOT NULL DEFAULT 'Preinscripto'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -143,7 +117,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('aEopko17I66__JrhIXQU6j6RWet3kUum', 1730460791, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2024-11-01T11:33:11.270Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"user\":{\"idalumno\":1,\"dni\":31840303,\"correo\":\"diegoeduardo66@gmail.com\",\"nombres\":\"DIEGO EDUARDO\",\"apellidos\":\"ALDERETE\"}}');
+('APE0FC-WdcOtgVPwUvX44m2AQ_BH855d', 1730772777, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2024-11-05T01:45:45.396Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"user\":{\"idalumno\":1,\"dni\":31840303,\"correo\":\"diegoeduardo66@gmail.com\",\"nombres\":\"DIEGO EDUARDO\",\"apellidos\":\"ALDERETE\"}}'),
+('t14iom9nntXQcHxIyaSoO2rVIVyDHSkm', 1730806890, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2024-11-05T11:27:30.611Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"user\":{\"idalumno\":1,\"dni\":31840303,\"correo\":\"diegoeduardo66@gmail.com\",\"nombres\":\"DIEGO EDUARDO\",\"apellidos\":\"ALDERETE\"}}');
 
 --
 -- Índices para tablas volcadas
@@ -195,13 +170,13 @@ ALTER TABLE `alumno`
 -- AUTO_INCREMENT de la tabla `carrera`
 --
 ALTER TABLE `carrera`
-  MODIFY `idcarrera` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `idcarrera` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `carreras`
 --
 ALTER TABLE `carreras`
-  MODIFY `idcarrera` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `idcarrera` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `preinscripcion`
