@@ -328,13 +328,14 @@ document.getElementById('enviarInscripcion').addEventListener('click', async () 
         if (result.success) {
             alert('Inscripción realizada exitosamente.');
             document.getElementById('enviarInscripcion').disabled = true;
+
             // Mostrar el botón de descarga y asignar el enlace de descarga al evento click
             const descargarBtn = document.getElementById('descargarConstancia');
             descargarBtn.style.display = 'inline-block';
             
             // Asigna la acción de descarga al hacer clic en el botón
             descargarBtn.onclick = () => {
-                window.location.href = result.downloadUrl; // Navegar a la URL de descarga
+                window.open(result.downloadUrl, '_blank'); // Abre en una nueva pestaña
             };
 
         } else {
@@ -344,6 +345,7 @@ document.getElementById('enviarInscripcion').addEventListener('click', async () 
         console.error('Error en el proceso de inscripción:', error);
     }
 });
+
 
 
 

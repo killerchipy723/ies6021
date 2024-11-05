@@ -352,24 +352,31 @@ app.put('/inscripciones/baja/:idinscripcion', async (req, res) => {
 
 //VERIFICAR SI EL ALUMNO ESTA INSCRIPTO CON INSCRIPCION ACTIVA
 
+;
 
 
 app.post('/inscripciones/nueva', async (req, res) => {
     const { idCarrera } = req.body;
     const idAlumno = req.session.user?.idalumno;
 
+    // Verificar que idAlumno y idCarrera sean válidos
     if (!idAlumno || !idCarrera) {
         return res.status(400).json({ success: false, message: 'Datos incompletos' });
     }
 
-    const fechaActual = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    // Obtener la fecha y hora actual del sistema y restar 3 horas
+    const fechaActual = new Date();
+    fechaActual.setHours(fechaActual.getHours() - 3); // Restar 3 horas
+    const fechaFormateada = fechaActual.toISOString().slice(0, 19).replace('T', ' ');
 
     try {
+        // Consultar si ya existe una inscripción activa para el alumno
         const [existingInscription] = await db.query(
             'SELECT estado FROM preinscripcion WHERE idalumno = ? AND estado = "Activo"',
             [idAlumno]
         );
 
+        // Verificar si hay una inscripción activa
         if (existingInscription && existingInscription.length > 0) {
             return res.status(400).json({
                 success: false,
@@ -377,13 +384,13 @@ app.post('/inscripciones/nueva', async (req, res) => {
             });
         }
 
-        // Realiza la inscripción
+        // Realizar la inscripción en la base de datos
         await db.query(
             'INSERT INTO preinscripcion (idalumno, idcarrera, fecha, estado) VALUES (?, ?, ?, ?)',
-            [idAlumno, idCarrera, fechaActual, 'Activo']
+            [idAlumno, idCarrera, fechaFormateada, 'Activo']
         );
 
-        // Consulta los datos del alumno y la carrera para generar el PDF
+        // Consultar los datos del alumno y la carrera para generar el PDF
         const [inscripciones] = await db.query(
             `SELECT i.idinscripcion, CONCAT(a.apellidos, ', ', a.nombres) AS Alumno, 
                     a.dni, c.nombre AS Carrera, 
@@ -394,6 +401,7 @@ app.post('/inscripciones/nueva', async (req, res) => {
              WHERE a.idalumno = ? AND i.estado = 'Activo'`, [idAlumno]
         );
 
+        // Verificar si se encontró la inscripción
         if (inscripciones.length > 0) {
             const inscripcion = inscripciones[0]; // Toma el primer resultado
 
@@ -401,13 +409,13 @@ app.post('/inscripciones/nueva', async (req, res) => {
             const pdfDir = path.join(__dirname, 'public', 'pdfs');
             if (!fs.existsSync(pdfDir)) fs.mkdirSync(pdfDir, { recursive: true });
 
-            const pdfPath = path.join(pdfDir, `constancia_inscripcion_${inscripcion.idinscripcion}.pdf`);
+            const pdfPath = path.join(pdfDir, `ConstanciaInsc-N°_${inscripcion.idinscripcion}.pdf`);
             
             // Genera el PDF
             await generarConstanciaPDF(inscripcion.idinscripcion, inscripcion.Carrera, inscripcion.fecha, 'Activo', inscripcion.Alumno, inscripcion.dni);
 
             // Retorna la URL de descarga en la respuesta JSON
-            const downloadUrl = `/pdfs/constancia_inscripcion_${inscripcion.idinscripcion}.pdf`;
+            const downloadUrl = `/pdfs/ConstanciaInsc-N°${inscripcion.idinscripcion}.pdf`;
             res.json({ success: true, downloadUrl });
         } else {
             res.status(404).json({ success: false, message: 'Inscripción no encontrada' });
@@ -422,9 +430,10 @@ app.post('/inscripciones/nueva', async (req, res) => {
 });
 
 
+
 app.get('/descargar-pdf/:idInscripcion', (req, res) => {
     const { idInscripcion } = req.params;
-    const pdfFilePath = path.join(__dirname, 'public', 'pdfs', `constancia_inscripcion_${idInscripcion}.pdf`);
+    const pdfFilePath = path.join(__dirname, 'public', 'pdfs', `ConstanciaInsc-N°${idInscripcion}.pdf`);
 
     // Verifica si el archivo existe antes de intentar descargarlo
     if (!fs.existsSync(pdfFilePath)) {
