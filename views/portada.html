@@ -97,8 +97,14 @@
                     <!-- Campo oculto para idAlumno -->
                     <input type="hidden" id="idAlumno" value="<%= idAlumno %>">
         
-                    <!-- Botón para enviar la inscripción -->
-                    <button type="button" class="btn btn-primary" id="enviarInscripcion">Enviar Preinscripción</button>
+                    <div class="button-container">
+                        <!-- Botón de Enviar Inscripción -->
+                        <button type="button" class="btn btn-primary" id="enviarInscripcion">Enviar Inscripción</button>
+                        
+                        <!-- Botón de Descargar Constancia (inicialmente oculto) -->
+                        <button type="button" class="btn btn-secondary" id="descargarConstancia" style="display: none;">Descargar Constancia</button>
+                    </div>
+                        
                 </div>
             </div>
         </section>
@@ -314,22 +320,30 @@ document.getElementById('enviarInscripcion').addEventListener('click', async () 
         const response = await fetch('/inscripciones/nueva', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ idCarrera }) // Solo enviamos idCarrera
+            body: JSON.stringify({ idCarrera })
         });
 
         const result = await response.json();
+
         if (result.success) {
-            alert(result.message); // Muestra mensaje de éxito del backend
-            location.reload();
+            alert('Inscripción realizada exitosamente.');
+            document.getElementById('enviarInscripcion').disabled = true;
+            // Mostrar el botón de descarga y asignar el enlace de descarga al evento click
+            const descargarBtn = document.getElementById('descargarConstancia');
+            descargarBtn.style.display = 'inline-block';
+            
+            // Asigna la acción de descarga al hacer clic en el botón
+            descargarBtn.onclick = () => {
+                window.location.href = result.downloadUrl; // Navegar a la URL de descarga
+            };
+
         } else {
-            alert(result.message); // Muestra mensaje de error específico del backend
+            alert('Error al realizar la inscripción: ' + result.message);
         }
     } catch (error) {
         console.error('Error en el proceso de inscripción:', error);
-        alert('Error en el proceso de inscripción');
     }
 });
-
 
 
 

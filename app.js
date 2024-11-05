@@ -6,6 +6,13 @@ const MySQLStore = require('express-mysql-session')(session);
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const mysql = require('mysql2/promise');
+const fs = require('fs');
+const pdf = require('pdfkit');
+const os = require('os'); 
+const generarConstanciaPDF = require('./constanciaPDF'); // Ajusta la ruta según sea necesario
+
+
+
 
 
 const app = express();
@@ -346,6 +353,7 @@ app.put('/inscripciones/baja/:idinscripcion', async (req, res) => {
 //VERIFICAR SI EL ALUMNO ESTA INSCRIPTO CON INSCRIPCION ACTIVA
 
 
+
 app.post('/inscripciones/nueva', async (req, res) => {
     const { idCarrera } = req.body;
     const idAlumno = req.session.user?.idalumno;
@@ -354,34 +362,56 @@ app.post('/inscripciones/nueva', async (req, res) => {
         return res.status(400).json({ success: false, message: 'Datos incompletos' });
     }
 
-    // Formatear la fecha en el formato correcto
     const fechaActual = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
     try {
-        // Verificar si el alumno ya tiene una inscripción activa en cualquier carrera
         const [existingInscription] = await db.query(
             'SELECT estado FROM preinscripcion WHERE idalumno = ? AND estado = "Activo"',
             [idAlumno]
         );
 
-        // Comprobar si ya hay una inscripción activa
         if (existingInscription && existingInscription.length > 0) {
             return res.status(400).json({
                 success: false,
-                message: 'El alumno ya tiene una inscripción activa y no puede inscribirse en otra carrera'
+                message: 'Ya tienes una inscripción activa. No puedes inscribirte en dos carreras al mismo tiempo'
             });
         }
 
-        // Si el alumno no tiene inscripción activa, permitir la inscripción
+        // Realiza la inscripción
         await db.query(
             'INSERT INTO preinscripcion (idalumno, idcarrera, fecha, estado) VALUES (?, ?, ?, ?)',
-            [idAlumno, idCarrera, fechaActual, 'Activo'] // Usar 'Activo' como estado inicial
+            [idAlumno, idCarrera, fechaActual, 'Activo']
         );
 
-        res.status(200).json({
-            success: true,
-            message: 'Inscripción realizada exitosamente'
-        });
+        // Consulta los datos del alumno y la carrera para generar el PDF
+        const [inscripciones] = await db.query(
+            `SELECT i.idinscripcion, CONCAT(a.apellidos, ', ', a.nombres) AS Alumno, 
+                    a.dni, c.nombre AS Carrera, 
+                    DATE_FORMAT(i.fecha, '%d-%m-%Y %H:%i:%s') AS fecha
+             FROM preinscripcion i
+             JOIN alumno a ON a.idalumno = i.idalumno
+             JOIN carreras c ON c.idcarrera = i.idcarrera
+             WHERE a.idalumno = ? AND i.estado = 'Activo'`, [idAlumno]
+        );
+
+        if (inscripciones.length > 0) {
+            const inscripcion = inscripciones[0]; // Toma el primer resultado
+
+            // Define la ruta para guardar el PDF en la carpeta pública
+            const pdfDir = path.join(__dirname, 'public', 'pdfs');
+            if (!fs.existsSync(pdfDir)) fs.mkdirSync(pdfDir, { recursive: true });
+
+            const pdfPath = path.join(pdfDir, `constancia_inscripcion_${inscripcion.idinscripcion}.pdf`);
+            
+            // Genera el PDF
+            await generarConstanciaPDF(inscripcion.idinscripcion, inscripcion.Carrera, inscripcion.fecha, 'Activo', inscripcion.Alumno, inscripcion.dni);
+
+            // Retorna la URL de descarga en la respuesta JSON
+            const downloadUrl = `/pdfs/constancia_inscripcion_${inscripcion.idinscripcion}.pdf`;
+            res.json({ success: true, downloadUrl });
+        } else {
+            res.status(404).json({ success: false, message: 'Inscripción no encontrada' });
+        }
     } catch (error) {
         console.error('Error al realizar la inscripción:', error);
         res.status(500).json({
@@ -390,6 +420,46 @@ app.post('/inscripciones/nueva', async (req, res) => {
         });
     }
 });
+
+
+app.get('/descargar-pdf/:idInscripcion', (req, res) => {
+    const { idInscripcion } = req.params;
+    const pdfFilePath = path.join(__dirname, 'public', 'pdfs', `constancia_inscripcion_${idInscripcion}.pdf`);
+
+    // Verifica si el archivo existe antes de intentar descargarlo
+    if (!fs.existsSync(pdfFilePath)) {
+        return res.status(404).send('Archivo no encontrado');
+    }
+
+    // Envía el archivo para descargar y luego lo elimina
+    res.download(pdfFilePath, (err) => {
+        if (err) {
+            console.error('Error al descargar el archivo:', err);
+            res.status(500).send('Error al descargar el archivo');
+        } else {
+            // Elimina el archivo después de la descarga exitosa
+            fs.unlink(pdfFilePath, (unlinkErr) => {
+                if (unlinkErr) {
+                    console.error('Error al eliminar el archivo:', unlinkErr);
+                } else {
+                    console.log(`Archivo ${pdfFilePath} eliminado después de la descarga.`);
+                }
+            });
+        }
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

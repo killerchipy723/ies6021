@@ -293,4 +293,25 @@ footer {
         margin: 20px 0;
     }
 
+   
+/* Estilos específicos para el contenedor de botones */
+.button-container {
+    display: flex;
+    gap: 10px; /* Espaciado entre los botones */
+    justify-content: flex-start; /* Alinea los botones al inicio */
+    margin-top: 15px; /* Espacio superior entre los botones y el formulario */
+}
+
+/* Ajustes responsive para dispositivos móviles */
+@media (max-width: 768px) {
+    .button-container {
+        flex-direction: column; /* Cambia a columna en pantallas pequeñas */
+        align-items: stretch; /* Hace que los botones ocupen el 100% del ancho */
+    }
+
+    .button-container button {
+        width: 100%; /* Asegura que los botones ocupen todo el ancho disponible */
+    }
+}
+
     
