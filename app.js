@@ -358,17 +358,17 @@ app.post('/inscripciones/nueva', async (req, res) => {
     const fechaActual = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
     try {
-        // Verificar si el alumno ya tiene una inscripción en la carrera y su estado
+        // Verificar si el alumno ya tiene una inscripción activa en cualquier carrera
         const [existingInscription] = await db.query(
-            'SELECT estado FROM preinscripcion WHERE idalumno = ? AND idcarrera = ?',
-            [idAlumno, idCarrera]
+            'SELECT estado FROM preinscripcion WHERE idalumno = ? AND estado = "Activo"',
+            [idAlumno]
         );
 
         // Comprobar si ya hay una inscripción activa
-        if (existingInscription && existingInscription.length > 0 && existingInscription[0].estado !== 'Baja') {
+        if (existingInscription && existingInscription.length > 0) {
             return res.status(400).json({
                 success: false,
-                message: 'El alumno ya está inscrito en esta carrera'
+                message: 'El alumno ya tiene una inscripción activa y no puede inscribirse en otra carrera'
             });
         }
 
@@ -390,6 +390,7 @@ app.post('/inscripciones/nueva', async (req, res) => {
         });
     }
 });
+
 
 
 
