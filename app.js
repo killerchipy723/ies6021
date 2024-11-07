@@ -163,7 +163,7 @@ app.post('/send-reset-email', async (req, res) => {
         if (!users || users.length === 0) {
             return res.status(404).json({ message: 'No se encontró un usuario con ese DNI y correo electrónico.' });
         }
-
+ 
         // Si existe el usuario, seleccionamos el primer elemento
         const user = users[0];
 
