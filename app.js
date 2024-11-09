@@ -17,7 +17,7 @@ const generarConstanciaPDF = require('./constanciaPDF'); // Ajusta la ruta segú
 
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
  
 // Middleware para servir archivos estáticos y parsear JSON
 app.use(express.static(path.join(__dirname, 'public')));
