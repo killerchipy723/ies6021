@@ -12,13 +12,6 @@ const os = require('os');
 const generarConstanciaPDF = require('./constanciaPDF'); // Ajusta la ruta según sea necesario
 const app = express();
 const port = 3000;
-
-const https = require('https');
-const options = {
-    key: fs.readFileSync(path.join(__dirname, 'cert', 'private.key')),
-    cert: fs.readFileSync(path.join(__dirname, 'cert', 'certificate.crt')),
-    
-};
  
 // Middleware para servir archivos estáticos y parsear JSON
 app.use(express.static(path.join(__dirname, 'public')));
@@ -164,7 +157,7 @@ app.post('/send-reset-email', async (req, res) => {
         if (!users || users.length === 0) {
             return res.status(404).json({ message: 'No se encontró un usuario con ese DNI y correo electrónico.' });
         }
-
+ 
         // Si existe el usuario, seleccionamos el primer elemento
         const user = users[0];
 
@@ -175,7 +168,7 @@ app.post('/send-reset-email', async (req, res) => {
 
         // Configurar el mensaje para el correo electrónico
         const message = {
-            text: `Aquí está el enlace para restablecer su contraseña: http://http://181.89.27.41:3000/reset-password?token=${token}`,
+            text: `Aquí está el enlace para restablecer su contraseña: http://ies6021jcdavalos.online/reset-password?token=${token}`,
             from: 'ies6.021jc@gmail.com',
             to: email,
             subject: 'Restablecimiento de Contraseña'
