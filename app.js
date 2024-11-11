@@ -12,11 +12,26 @@ const os = require('os');
 const generarConstanciaPDF = require('./constanciaPDF'); // Ajusta la ruta según sea necesario
 const app = express();
 const port = 3000;
+const https = require('https')
  
 // Middleware para servir archivos estáticos y parsear JSON
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+const options = {
+    key: fs.readFileSync(path.join(__dirname, 'cert', 'private.key')),
+    cert: fs.readFileSync(path.join(__dirname, 'cert', 'certificate.crt')),
+    
+};
+
+app.get('/', (req, res) => {
+    res.send('¡Servidor HTTPS en puerto 3000!');
+});
+
+https.createServer(options, app).listen(port, () => {
+    console.log(`Servidor HTTPS escuchando en https://localhost:${port}`);
+});
 
 
 
