@@ -10,14 +10,15 @@ const fs = require('fs');
 const pdf = require('pdfkit');
 const os = require('os'); 
 const generarConstanciaPDF = require('./constanciaPDF'); // Ajusta la ruta según sea necesario
-
-
-
-
-
-
 const app = express();
 const port = 3000;
+
+const https = require('https');
+const options = {
+    key: fs.readFileSync(path.join(__dirname, 'cert', 'private.key')),
+    cert: fs.readFileSync(path.join(__dirname, 'cert', 'certificate.crt')),
+    
+};
  
 // Middleware para servir archivos estáticos y parsear JSON
 app.use(express.static(path.join(__dirname, 'public')));
@@ -459,23 +460,6 @@ app.get('/descargar-pdf/:idInscripcion', (req, res) => {
     });
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ruta para obtener el id del alumno
 
 app.get('/preinscripcion', (req, res) => {
@@ -486,20 +470,7 @@ app.get('/preinscripcion', (req, res) => {
         res.redirect('/login'); // Redirige al login si no está autenticado
     }
 });
-
-
-
 /// GUARDAR LA INSCRIPCION DEL ALUMNO
-
-
-
-
-
-
-
-
-
-
 
 app.listen(port, '0.0.0.0',() => {
     console.log(`Servidor corriendo en http://localhost:${port}`);
