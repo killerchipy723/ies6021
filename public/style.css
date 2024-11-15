@@ -166,11 +166,42 @@ footer {
     transition: background-color 0.3s; /* Efecto de transición */
     font-size: 1em; /* Tamaño de fuente */
     font-weight: bold; /* Negrita */
+    display: flex; /* Flexbox para diseño */
+    align-items: center; /* Centrado vertical */
+    justify-content: center; /* Centrado horizontal */
+    gap: 8px; /* Espaciado entre icono y texto */
 }
 
 .logout-button:hover {
     background-color: #c9302c; /* Color de fondo al pasar el mouse */
 }
+
+.logout-button i {
+    font-size: 1.2em; /* Tamaño del icono */
+}
+
+@media (max-width: 768px) {
+    .logout-button {
+        font-size: 0.9em; /* Reducir tamaño del texto */
+        padding: 8px 16px; /* Reducir espaciado */
+    }
+
+    .logout-button i {
+        font-size: 1em; /* Reducir tamaño del icono */
+    }
+}
+
+@media (max-width: 480px) {
+    .logout-button {
+        font-size: 0.8em; /* Reducir más tamaño del texto */
+        padding: 6px 12px; /* Espaciado compacto */
+    }
+
+    .logout-button i {
+        font-size: 0.9em; /* Reducir icono */
+    }
+}
+
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
