@@ -6,6 +6,13 @@ const MySQLStore = require('express-mysql-session')(session);
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const mysql = require('mysql2/promise');
+const fs = require('fs');
+const pdf = require('pdfkit');
+const os = require('os'); 
+const generarConstanciaPDF = require('./constanciaPDF'); // Ajusta la ruta según sea necesario
+
+
+
 
 
 const app = express();
@@ -67,6 +74,7 @@ app.post('/login', async (req, res) => {
             };
 
             const nombreCompleto = `${user[0].apellidos}, ${user[0].nombres}`;
+            const idalu = user[0].idalumno;
             return res.status(200).json({ success: true, nombreCompleto });
         } else {
             return res.status(401).json({ success: false, message: 'DNI o contraseña incorrectos.' });
@@ -165,7 +173,7 @@ app.post('/send-reset-email', async (req, res) => {
 
         // Configurar el mensaje para el correo electrónico
         const message = {
-            text: `Aquí está el enlace para restablecer su contraseña: http://localhost:3000/reset-password?token=${token}`,
+            text: `Aquí está el enlace para restablecer su contraseña: http://http://181.89.27.41:3000/reset-password?token=${token}`,
             from: 'ies6.021jc@gmail.com',
             to: email,
             subject: 'Restablecimiento de Contraseña'
@@ -225,7 +233,7 @@ app.post('/registro', async (req, res) => {
 
     if (!dni1 || !correo) {
         return res.status(400).json({ message: 'DNI y correo son obligatorios.' });
-    } 
+    }
 
     if (clave1 !== clave2) {
         return res.status(400).json({ message: 'Las contraseñas no coinciden.' });
@@ -251,6 +259,7 @@ app.post('/registro', async (req, res) => {
         res.status(500).json({ message: 'Error al insertar datos en la base de datos.' });
     }
 });
+
 
 // TABLA INSCRIPCIONES
 
@@ -350,12 +359,10 @@ app.post('/inscripciones/nueva', async (req, res) => {
     const { idCarrera } = req.body;
     const idAlumno = req.session.user?.idalumno;
 
-    // Verificar que idAlumno y idCarrera sean válidos
     if (!idAlumno || !idCarrera) {
         return res.status(400).json({ success: false, message: 'Datos incompletos' });
     }
 
-    // Obtener la fecha y hora actual del sistema y restar 3 horas
     const fechaActual = new Date();
     fechaActual.setHours(fechaActual.getHours() - 3); // Restar 3 horas
     const fechaFormateada = fechaActual.toISOString().slice(0, 19).replace('T', ' ');
@@ -367,21 +374,36 @@ app.post('/inscripciones/nueva', async (req, res) => {
             [idAlumno]
         );
 
-        // Verificar si hay una inscripción activa
-        if (existingInscription && existingInscription.length > 0) {
+        if (existingInscription.length > 0) {
             return res.status(400).json({
                 success: false,
                 message: 'Ya tienes una inscripción activa. No puedes inscribirte en dos carreras al mismo tiempo'
             });
         }
 
-        // Realizar la inscripción en la base de datos
+        // Verificar el número de inscripciones para la carrera seleccionada
+        const [countResults] = await db.query(
+            'SELECT COUNT(*) AS total FROM preinscripcion WHERE idcarrera = ? AND estado = "Activo"',
+            [idCarrera]
+        );
+        const inscripcionesActivas = countResults[0]?.total || 0;
+
+        // Definir el límite según la carrera
+        const limiteInscripciones = idCarrera === 1 ? 3 : 2;
+
+        // Validar el límite y generar advertencia si se alcanza
+        let mensajeAdvertencia = null;
+        if (inscripcionesActivas >= limiteInscripciones) {
+            mensajeAdvertencia = 'Se alcanzó el límite de preinscripciones permitidas. Ud será inscrito como suplente.';
+        }
+
+        // Insertar la inscripción en la base de datos
         await db.query(
             'INSERT INTO preinscripcion (idalumno, idcarrera, fecha, estado) VALUES (?, ?, ?, ?)',
             [idAlumno, idCarrera, fechaFormateada, 'Activo']
         );
 
-        // Consultar los datos del alumno y la carrera para generar el PDF
+        // Generar el PDF y responder con el mensaje y enlace de descarga
         const [inscripciones] = await db.query(
             `SELECT i.idinscripcion, CONCAT(a.apellidos, ', ', a.nombres) AS Alumno, 
                     a.dni, c.nombre AS Carrera, 
@@ -392,33 +414,31 @@ app.post('/inscripciones/nueva', async (req, res) => {
              WHERE a.idalumno = ? AND i.estado = 'Activo'`, [idAlumno]
         );
 
-        // Verificar si se encontró la inscripción
         if (inscripciones.length > 0) {
-            const inscripcion = inscripciones[0]; // Toma el primer resultado
+            const inscripcion = inscripciones[0];
 
-            // Define la ruta para guardar el PDF en la carpeta pública
             const pdfDir = path.join(__dirname, 'public', 'pdfs');
             if (!fs.existsSync(pdfDir)) fs.mkdirSync(pdfDir, { recursive: true });
 
             const pdfPath = path.join(pdfDir, `ConstanciaInsc-N°_${inscripcion.idinscripcion}.pdf`);
-            
-            // Genera el PDF
+
             await generarConstanciaPDF(inscripcion.idinscripcion, inscripcion.Carrera, inscripcion.fecha, 'Activo', inscripcion.Alumno, inscripcion.dni);
 
-            // Retorna la URL de descarga en la respuesta JSON
             const downloadUrl = `/pdfs/ConstanciaInsc-N°${inscripcion.idinscripcion}.pdf`;
-            res.json({ success: true, downloadUrl });
+            return res.json({ 
+                success: true, 
+                downloadUrl, 
+                message: mensajeAdvertencia || 'Inscripción realizada con éxito' 
+            });
         } else {
             res.status(404).json({ success: false, message: 'Inscripción no encontrada' });
         }
     } catch (error) {
         console.error('Error al realizar la inscripción:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error al realizar la inscripción'
-        });
+        res.status(500).json({ success: false, message: 'Error al realizar la inscripción' });
     }
 });
+
 
 
 
@@ -449,6 +469,7 @@ app.get('/descargar-pdf/:idInscripcion', (req, res) => {
     });
 });
 
+
 // ruta para obtener el id del alumno
 
 app.get('/preinscripcion', (req, res) => {
@@ -459,33 +480,44 @@ app.get('/preinscripcion', (req, res) => {
         res.redirect('/login'); // Redirige al login si no está autenticado
     }
 });
-/// GUARDAR LA INSCRIPCION DEL ALUMNO
+/// TABLA DE REGISTROS
 
-// Ruta para obtener inscripciones con filtro opcional de carrera y ordenamiento
-app.get('/inscripciones', verificarAutenticacion, async (req, res) => {
-    const { carrera, ordenar } = req.query;
+app.get('/activos', async (req, res) => {
+    // Obtenemos el parámetro opcional idCarrera de la query string
+    const { idCarrera } = req.query;
+
+    // Consulta SQL base
     let query = `
-        SELECT i.idinscripcion, CONCAT(a.apellidos, ', ', a.nombres) AS Alumno, 
-               a.dni, c.nombre AS Carrera, 
+        SELECT i.idinscripcion, 
+               CONCAT(a.apellidos, ', ', a.nombres) AS Alumno, 
+               a.dni, 
+               c.nombre AS Carrera, 
                DATE_FORMAT(i.fecha, '%d-%m-%Y %H:%i:%s') AS fecha
         FROM preinscripcion i
         JOIN alumno a ON a.idalumno = i.idalumno
         JOIN carreras c ON c.idcarrera = i.idcarrera
+        WHERE i.estado = 'Activo'
     `;
 
-    const conditions = [];
-    if (carrera) conditions.push(`c.idcarrera = ${db.escape(carrera)}`);
-    if (conditions.length) query += ` WHERE ${conditions.join(' AND ')}`;
-    if (ordenar === 'true') query += ` ORDER BY c.nombre`;
+    // Si hay un idCarrera, añadimos la cláusula para filtrar
+    if (idCarrera) {
+        query += ` AND c.idcarrera = ?`;
+    }
 
     try {
-        const [results] = await db.query(query);
-        res.json(results);
-    } catch (err) {
-        console.error('Error al obtener inscripciones:', err);
-        res.status(500).json({ error: 'Error al obtener inscripciones' });
+        // Ejecutamos la consulta con o sin parámetros
+        const [result] = idCarrera 
+            ? await db.query(query, [idCarrera]) 
+            : await db.query(query);
+
+        res.json(result); // Devolvemos el resultado como JSON
+    } catch (error) {
+        console.error('Error al obtener los registros activos:', error);
+        res.status(500).json({ error: 'Error al obtener los registros activos' });
     }
 });
+
+
 
 
 app.listen(port, '0.0.0.0',() => {

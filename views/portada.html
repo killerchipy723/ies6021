@@ -356,6 +356,31 @@ document.getElementById('enviarInscripcion').addEventListener('click', async () 
     }
 });
 
+app.post('/inscripciones/nueva', async (req, res) => {
+    const { idCarrera } = req.body;
+
+    if (!idCarrera) {
+        return res.status(400).json({ success: false, message: 'Carrera no seleccionada' });
+    }
+
+    try {
+        // Lógica para guardar la inscripción en la base de datos
+        const [result] = await db.query(
+            'INSERT INTO inscripciones (idCarrera, idAlumno) VALUES (?, ?)',
+            [idCarrera, req.session.user.idalumno] // Usar el ID del alumno logueado
+        );
+
+        // Generar URL de descarga (simulada para el ejemplo)
+        const downloadUrl = `/constancias/inscripcion_${result.insertId}.pdf`;
+
+        res.status(200).json({ success: true, downloadUrl });
+    } catch (error) {
+        console.error('Error al procesar la inscripción:', error);
+        res.status(500).json({ success: false, message: 'Error interno del servidor' });
+    }
+});
+
+
 
 
 
