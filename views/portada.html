@@ -130,68 +130,66 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const nombreCompleto = sessionStorage.getItem('nombreCompleto');
-        if (nombreCompleto) {
-            document.getElementById('welcome-message').textContent = `Bienvenido Alumno/a: ${nombreCompleto}`;
-        }
+       const nombreCompleto = sessionStorage.getItem('nombreCompleto');
+if (nombreCompleto) {
+    document.getElementById('welcome-message').textContent = `Bienvenido Alumno/a: ${nombreCompleto}`;
+}
 
-        document.getElementById('cerrarSesion').addEventListener('click', () => {
-            sessionStorage.removeItem('nombreCompleto');
-            window.location.href = '/index.html';
+document.getElementById('cerrarSesion').addEventListener('click', () => {
+    sessionStorage.removeItem('nombreCompleto');
+    window.location.href = '/index.html';
+});
+
+function showSection(sectionId) {
+    const sections = ['portada', 'propuestas', 'disponibilidad', 'preinscripcion'];
+    sections.forEach(id => document.getElementById(id).style.display = 'none');
+    document.getElementById(sectionId).style.display = 'block';
+
+    if (sectionId === 'propuestas') loadCarreras();
+    if (sectionId === 'preinscripcion') loadCarrera();
+}
+
+async function loadCarreras() {
+    try {
+        const response = await fetch('/carreras');
+        const carreras = await response.json();
+        const tableBody = document.getElementById('carrera-table-body');
+        tableBody.innerHTML = '';
+
+        carreras.forEach(carrera => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${carrera.idcarrera}</td>
+                <td>${carrera.nombre}</td>
+                <td>${carrera.tipo}</td>
+                <td>${carrera.duracion}</td>
+            `;
+            tableBody.appendChild(row);
         });
+    } catch (error) {
+        console.error('Error al cargar las carreras:', error);
+    }
+}
 
-        function showSection(sectionId) {
-            const sections = ['portada', 'propuestas', 'disponibilidad', 'preinscripcion'];
-            sections.forEach(id => document.getElementById(id).style.display = 'none');
-            document.getElementById(sectionId).style.display = 'block';
+async function loadCarrera() {
+    try {
+        const response = await fetch('/carreras');
+        const carreras = await response.json();
+        const carreraSelect = document.getElementById('carrera');
+        carreraSelect.innerHTML = '<option value="" disabled selected>Seleccione una carrera</option>';
 
-            if (sectionId === 'propuestas') loadCarreras();
-            if (sectionId === 'preinscripcion') loadCarrera();
-        }
+        carreras.forEach(carrera => {
+            const option = document.createElement('option');
+            option.value = carrera.idcarrera;
+            option.textContent = carrera.nombre;
+            carreraSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error al cargar las carreras:', error);
+    }
+}
 
-        async function loadCarreras() {
-            try {
-                const response = await fetch('/carreras');
-                const carreras = await response.json();
-                const tableBody = document.getElementById('carrera-table-body');
-                tableBody.innerHTML = '';
-
-                carreras.forEach(carrera => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${carrera.idcarrera}</td>
-                        <td>${carrera.nombre}</td>
-                        <td>${carrera.tipo}</td>
-                        <td>${carrera.duracion}</td>
-                        
-                    `;
-                    tableBody.appendChild(row);
-                });
-            } catch (error) {
-                console.error('Error al cargar las carreras:', error);
-            }
-        }
-
-        async function loadCarrera() {
-            try {
-                const response = await fetch('/carreras');
-                const carreras = await response.json();
-                const carreraSelect = document.getElementById('carrera');
-                carreraSelect.innerHTML = '<option value="" disabled selected>Seleccione una carrera</option>';
-
-                carreras.forEach(carrera => {
-                    const option = document.createElement('option');
-                    option.value = carrera.idcarrera;
-                    option.textContent = carrera.nombre;
-                    carreraSelect.appendChild(option);
-                });
-            } catch (error) {
-                console.error('Error al cargar las carreras:', error);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-    // Realiza una solicitud fetch al endpoint de datos del alumno
+document.addEventListener('DOMContentLoaded', () => {
     fetch('/datos-alumno')
         .then(response => {
             if (!response.ok) {
@@ -200,7 +198,6 @@
             return response.json();
         })
         .then(data => {
-            // Rellena el panel con los datos obtenidos del servidor
             document.getElementById('apellidos').textContent = data.apellidos;
             document.getElementById('nombres').textContent = data.nombres;
             document.getElementById('cuil').textContent = data.cuil;
@@ -208,104 +205,50 @@
             document.getElementById('localidad').textContent = data.localidad;
             document.getElementById('telefono').textContent = data.telefono;
         })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-
-    // Cargar las opciones de carrera en el combobox
-    const carreras = ['Ingeniería', 'Medicina', 'Derecho', 'Arquitectura'];
-    const carreraSelect = document.getElementById('carrera');
-    carreras.forEach(carrera => {
-        const option = document.createElement('option');
-        option.value = carrera;
-        option.textContent = carrera;
-        carreraSelect.appendChild(option);
-    });
-});
-document.getElementById('consultarDisponibilidad').addEventListener('click', function() {
-    // Realizar la solicitud AJAX al backend para obtener los datos de inscripciones
-    fetch('/inscripciones')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const tbody = document.querySelector('#tablaInscripciones tbody');
-                tbody.innerHTML = ''; // Limpiar cualquier dato previo
-
-                // Recorrer los datos y crear filas en la tabla
-                data.inscripciones.forEach(inscripcion => {
-                    const fila = document.createElement('tr');
-                    fila.innerHTML = `
-                        <td>${inscripcion.idinscripcion}</td>
-                        <td>${inscripcion.Alumno}</td>
-                        <td>${inscripcion.dni}</td>
-                        <td>${inscripcion.Carrera}</td>
-                        <td>${inscripcion.fecha}</td>
-                    `;
-                    tbody.appendChild(fila);
-                });
-
-                // Mostrar la tabla
-                document.getElementById('tablaInscripciones').style.display = 'table';
-            } else {
-                alert('No se encontraron inscripciones para este usuario.');
-            }
-        })
-        .catch(error => {
-            console.error('Error al consultar disponibilidad:', error);
-            alert('Ocurrió un error al consultar la disponibilidad.');
-        });
+        .catch(error => console.error('Error:', error));
 });
 
-// Mostrar inscripciones al hacer clic en "Consultar"
 document.getElementById('consultarDisponibilidad').addEventListener('click', async () => {
     try {
-        // Realiza la consulta de inscripciones (implementación existente)
         const response = await fetch('/inscripciones');
         const data = await response.json();
 
-        // Verifica si hay inscripciones
         if (data.success && data.inscripciones.length > 0) {
-            // Muestra la tabla y el botón "Dar de Baja"
-            document.getElementById('tablaInscripciones').style.display = 'table';
-            document.getElementById('darDeBaja').style.display = 'inline-block';
-
-            // Agrega las inscripciones a la tabla
-            const tbody = document.getElementById('tablaInscripciones').querySelector('tbody');
-            tbody.innerHTML = ''; // Limpia cualquier dato previo
-            data.inscripciones.forEach((inscripcion) => {
+            const tbody = document.querySelector('#tablaInscripciones tbody');
+            tbody.innerHTML = '';
+            data.inscripciones.forEach(inscripcion => {
                 const row = `<tr>
-                                <td>${inscripcion.idinscripcion}</td>
-                                <td>${inscripcion.Alumno}</td>
-                                <td>${inscripcion.dni}</td>
-                                <td>${inscripcion.Carrera}</td>
-                                <td>${inscripcion.fecha}</td>
-                            </tr>`;
+                    <td>${inscripcion.idinscripcion}</td>
+                    <td>${inscripcion.Alumno}</td>
+                    <td>${inscripcion.dni}</td>
+                    <td>${inscripcion.Carrera}</td>
+                    <td>${inscripcion.fecha}</td>
+                </tr>`;
                 tbody.innerHTML += row;
             });
+            document.getElementById('tablaInscripciones').style.display = 'table';
+            document.getElementById('darDeBaja').style.display = 'inline-block';
         } else {
-           // alert('No se encontraron inscripciones.');
-            document.getElementById('darDeBaja').style.display = 'none'; // Oculta el botón si no hay resultados
+            document.getElementById('darDeBaja').style.display = 'none';
         }
     } catch (error) {
         console.error('Error al consultar inscripciones:', error);
     }
 });
 
-// Al hacer clic en "Dar de Baja"
 document.getElementById('darDeBaja').addEventListener('click', async () => {
     const idInscripcion = document.querySelector('#tablaInscripciones tbody tr td:first-child').innerText;
-    
+
     if (confirm('¿Desea darse de baja de la inscripción?')) {
         try {
             const response = await fetch(`/inscripciones/baja/${idInscripcion}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' }
             });
-
             const result = await response.json();
+
             if (result.success) {
                 alert('La inscripción ha sido dada de baja.');
-                // Refresca la página actual (portada.html)
                 window.location.reload();
             } else {
                 alert('Error al dar de baja la inscripción.');
@@ -317,7 +260,6 @@ document.getElementById('darDeBaja').addEventListener('click', async () => {
     }
 });
 
-// Insertar inscripción de alumno
 document.getElementById('enviarInscripcion').addEventListener('click', async () => {
     const idCarrera = document.getElementById('carrera').value;
 
@@ -338,16 +280,9 @@ document.getElementById('enviarInscripcion').addEventListener('click', async () 
         if (result.success) {
             alert('Inscripción realizada exitosamente.');
             document.getElementById('enviarInscripcion').disabled = true;
-
-            // Mostrar el botón de descarga y asignar el enlace de descarga al evento click
             const descargarBtn = document.getElementById('descargarConstancia');
             descargarBtn.style.display = 'inline-block';
-            
-            // Asigna la acción de descarga al hacer clic en el botón
-            descargarBtn.onclick = () => {
-                window.open(result.downloadUrl, '_blank'); // Abre en una nueva pestaña
-            };
-
+            descargarBtn.onclick = () => window.open(result.downloadUrl, '_blank');
         } else {
             alert('Error al realizar la inscripción: ' + result.message);
         }
@@ -356,40 +291,18 @@ document.getElementById('enviarInscripcion').addEventListener('click', async () 
     }
 });
 
-app.post('/inscripciones/nueva', async (req, res) => {
-    const { idCarrera } = req.body;
-
-    if (!idCarrera) {
-        return res.status(400).json({ success: false, message: 'Carrera no seleccionada' });
-    }
-
-    try {
-        // Lógica para guardar la inscripción en la base de datos
-        const [result] = await db.query(
-            'INSERT INTO inscripciones (idCarrera, idAlumno) VALUES (?, ?)',
-            [idCarrera, req.session.user.idalumno] // Usar el ID del alumno logueado
-        );
-
-        // Generar URL de descarga (simulada para el ejemplo)
-        const downloadUrl = `/constancias/inscripcion_${result.insertId}.pdf`;
-
-        res.status(200).json({ success: true, downloadUrl });
-    } catch (error) {
-        console.error('Error al procesar la inscripción:', error);
-        res.status(500).json({ success: false, message: 'Error interno del servidor' });
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    const sections = ['portada', 'propuestas', 'disponibilidad', 'preinscripcion'];
+    sections.forEach(id => {
+        const section = document.getElementById(id);
+        if (id === 'portada') {
+            section.style.display = 'block';
+        } else {
+            section.style.display = 'none';
+        }
+    });
 });
 
-
-
-
-
-
-
-
-        window.onload = () => {
-            showSection('portada');
-        };
     </script>
 </body>
 </html>
