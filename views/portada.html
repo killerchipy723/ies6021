@@ -70,6 +70,9 @@
             <p>Aquí puedes consultar el estado de tus preinscripciones.</p>
             <button class="btn btn-primary" id="consultarDisponibilidad">Consultar</button>
             <button class="btn btn-danger" id="darDeBaja" style="display: none;">Dar de Baja</button>
+            <button class="btn btn-secondary" id="descargarConstancia" style="display: none;">Dar de Baja</button>
+
+           
             <div class="table-responsive">
                 <table class="table table-striped table-bordered" id="tablaInscripciones" style="display: none; width: 100%;">
                     <thead>
@@ -228,6 +231,7 @@ document.getElementById('consultarDisponibilidad').addEventListener('click', asy
             });
             document.getElementById('tablaInscripciones').style.display = 'table';
             document.getElementById('darDeBaja').style.display = 'inline-block';
+            document.getElementById('descargarConstancia').style.display = 'inline-block';
         } else {
             document.getElementById('darDeBaja').style.display = 'none';
         }
