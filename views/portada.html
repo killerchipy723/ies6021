@@ -70,9 +70,6 @@
             <p>Aquí puedes consultar el estado de tus preinscripciones.</p>
             <button class="btn btn-primary" id="consultarDisponibilidad">Consultar</button>
             <button class="btn btn-danger" id="darDeBaja" style="display: none;">Dar de Baja</button>
-            <button class="btn btn-secondary" id="descargarConstancia" style="display: none;">Dar de Baja</button>
-
-           
             <div class="table-responsive">
                 <table class="table table-striped table-bordered" id="tablaInscripciones" style="display: none; width: 100%;">
                     <thead>
@@ -133,25 +130,29 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-       const nombreCompleto = sessionStorage.getItem('nombreCompleto');
+        // Mostrar el nombre completo del alumno si existe
+const nombreCompleto = sessionStorage.getItem('nombreCompleto');
 if (nombreCompleto) {
     document.getElementById('welcome-message').textContent = `Bienvenido Alumno/a: ${nombreCompleto}`;
 }
 
+// Cerrar sesión
 document.getElementById('cerrarSesion').addEventListener('click', () => {
     sessionStorage.removeItem('nombreCompleto');
     window.location.href = '/index.html';
 });
 
+// Mostrar solo la sección correspondiente y ocultar las demás
 function showSection(sectionId) {
     const sections = ['portada', 'propuestas', 'disponibilidad', 'preinscripcion'];
     sections.forEach(id => document.getElementById(id).style.display = 'none');
     document.getElementById(sectionId).style.display = 'block';
 
-    if (sectionId === 'propuestas') loadCarreras();
-    if (sectionId === 'preinscripcion') loadCarrera();
+    if (sectionId === 'propuestas') loadCarreras(); // Cargar propuestas
+    if (sectionId === 'preinscripcion') loadCarrera(); // Cargar preinscripción
 }
 
+// Cargar las carreras en la tabla
 async function loadCarreras() {
     try {
         const response = await fetch('/carreras');
@@ -174,6 +175,7 @@ async function loadCarreras() {
     }
 }
 
+// Cargar las carreras en el selector
 async function loadCarrera() {
     try {
         const response = await fetch('/carreras');
@@ -191,25 +193,6 @@ async function loadCarrera() {
         console.error('Error al cargar las carreras:', error);
     }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    fetch('/datos-alumno')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error al obtener datos del alumno');
-            }
-            return response.json();
-        })
-        .then(data => {
-            document.getElementById('apellidos').textContent = data.apellidos;
-            document.getElementById('nombres').textContent = data.nombres;
-            document.getElementById('cuil').textContent = data.cuil;
-            document.getElementById('dni').textContent = data.dni;
-            document.getElementById('localidad').textContent = data.localidad;
-            document.getElementById('telefono').textContent = data.telefono;
-        })
-        .catch(error => console.error('Error:', error));
-});
 
 document.getElementById('consultarDisponibilidad').addEventListener('click', async () => {
     try {
@@ -232,6 +215,7 @@ document.getElementById('consultarDisponibilidad').addEventListener('click', asy
             document.getElementById('tablaInscripciones').style.display = 'table';
             document.getElementById('darDeBaja').style.display = 'inline-block';
             document.getElementById('descargarConstancia').style.display = 'inline-block';
+            document.getElementById('descargarMaterial').style.display = 'inline-block';
         } else {
             document.getElementById('darDeBaja').style.display = 'none';
         }
@@ -264,6 +248,7 @@ document.getElementById('darDeBaja').addEventListener('click', async () => {
     }
 });
 
+// Procesar la inscripción y habilitar el botón de descarga
 document.getElementById('enviarInscripcion').addEventListener('click', async () => {
     const idCarrera = document.getElementById('carrera').value;
 
@@ -285,8 +270,8 @@ document.getElementById('enviarInscripcion').addEventListener('click', async () 
             alert('Inscripción realizada exitosamente.');
             document.getElementById('enviarInscripcion').disabled = true;
             const descargarBtn = document.getElementById('descargarConstancia');
-            descargarBtn.style.display = 'inline-block';
-            descargarBtn.onclick = () => window.open(result.downloadUrl, '_blank');
+            descargarBtn.style.display = 'inline-block'; // Muestra el botón
+            descargarBtn.onclick = () => window.open(result.downloadUrl, '_blank'); // Asigna enlace de descarga
         } else {
             alert('Error al realizar la inscripción: ' + result.message);
         }
@@ -295,17 +280,25 @@ document.getElementById('enviarInscripcion').addEventListener('click', async () 
     }
 });
 
+// Cargar datos del alumno
 document.addEventListener('DOMContentLoaded', () => {
-    const sections = ['portada', 'propuestas', 'disponibilidad', 'preinscripcion'];
-    sections.forEach(id => {
-        const section = document.getElementById(id);
-        if (id === 'portada') {
-            section.style.display = 'block';
-        } else {
-            section.style.display = 'none';
-        }
-    });
+    fetch('/datos-alumno')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('apellidos').textContent = data.apellidos;
+            document.getElementById('nombres').textContent = data.nombres;
+            document.getElementById('cuil').textContent = data.cuil;
+            document.getElementById('dni').textContent = data.dni;
+            document.getElementById('localidad').textContent = data.localidad;
+            document.getElementById('telefono').textContent = data.telefono;
+        })
+        .catch(error => console.error('Error al cargar los datos del alumno:', error));
 });
+
+// Ocultar todas las secciones excepto la portada al cargar la página
+window.onload = () => {
+    showSection('portada');
+};
 
     </script>
 </body>
