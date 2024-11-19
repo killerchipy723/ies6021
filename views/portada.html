@@ -28,6 +28,7 @@
             <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('propuestas')">Ver Propuestas Académicas</a></li>
             <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('disponibilidad')">Consulta Estado de Preinscripciónes</a></li>
             <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('preinscripcion')">Pre-Inscripción a Carreras</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('documentacion')">Descarga de Documentación</a></li>
         </ul>
     </nav>
     
@@ -118,6 +119,17 @@
                 </div>
             </div>
         </section>
+
+        <section id="documentacion">
+            <h2>Descarga Documentación</h2>
+            <p>Todo el material que necesitas lo puedes descargar en un mismo sitio</p>
+        
+            <!-- Botón para descargar el archivo -->
+            <a href="/material/Material de Estudio.pdf" download="Material de Estudio.pdf">
+                <button class="btn btn-primary" >Descargar Material</button>
+            </a>
+        </section>
+        
         
         
     </main>
@@ -144,7 +156,7 @@ document.getElementById('cerrarSesion').addEventListener('click', () => {
 
 // Mostrar solo la sección correspondiente y ocultar las demás
 function showSection(sectionId) {
-    const sections = ['portada', 'propuestas', 'disponibilidad', 'preinscripcion'];
+    const sections = ['portada', 'propuestas', 'disponibilidad', 'preinscripcion','documentacion'];
     sections.forEach(id => document.getElementById(id).style.display = 'none');
     document.getElementById(sectionId).style.display = 'block';
 
