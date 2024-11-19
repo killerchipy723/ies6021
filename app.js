@@ -451,23 +451,27 @@ app.get('/descargar-pdf/:idInscripcion', (req, res) => {
         return res.status(404).send('Archivo no encontrado');
     }
 
-    // Envía el archivo para descargar y luego lo elimina
+    // Envía el archivo para descargar
     res.download(pdfFilePath, (err) => {
         if (err) {
             console.error('Error al descargar el archivo:', err);
             res.status(500).send('Error al descargar el archivo');
         } else {
-            // Elimina el archivo después de la descarga exitosa
-            fs.unlink(pdfFilePath, (unlinkErr) => {
-                if (unlinkErr) {
-                    console.error('Error al eliminar el archivo:', unlinkErr);
-                } else {
-                    console.log(`Archivo ${pdfFilePath} eliminado después de la descarga.`);
-                }
-            });
+            // Añadir un pequeño retraso para asegurar que la descarga se ha iniciado
+            setTimeout(() => {
+                // Elimina el archivo después de la descarga
+                fs.unlink(pdfFilePath, (unlinkErr) => {
+                    if (unlinkErr) {
+                        console.error('Error al eliminar el archivo:', unlinkErr);
+                    } else {
+                        console.log(`Archivo ${pdfFilePath} eliminado después de la descarga.`);
+                    }
+                });
+            }, 10000);  // Espera 1 segundo antes de eliminar el archivo
         }
     });
 });
+
 
 
 // ruta para obtener el id del alumno
