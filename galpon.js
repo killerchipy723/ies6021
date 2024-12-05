@@ -223,5 +223,81 @@ router.get('/descargar-pdf/:idInscripcion', (req, res) => {
         }
     });
 });
+
+
+
+router.get('/activosg-paginadosg', async (req, res) => {
+    const { pagina = 1, limite = 10 } = req.query;
+    const offset = (pagina - 1) * limite;
+
+    try {
+        const query = `
+            SELECT i.idinscripcion, 
+                   CONCAT(a.apellidos, ', ', a.nombres) AS Alumno, 
+                   a.dni, c.nombre AS Carrera, 
+                   DATE_FORMAT(i.fecha, '%d-%m-%Y %H:%i:%s') AS fecha
+            FROM preinscripciong i
+            JOIN alumno a ON a.idalumno = i.idalumno
+            JOIN carrerag c ON c.idcarrera = i.idcarrera
+            WHERE i.estado = 'Activo'
+            LIMIT ? OFFSET ?;
+        `;
+        const [result] = await db.query(query, [parseInt(limite), parseInt(offset)]);
+
+        const [totalResult] = await db.query('SELECT COUNT(*) AS total FROM preinscripciong WHERE estado = "Activo"');
+        const total = totalResult[0].total;
+
+        res.json({ registros: result, total });
+    } catch (error) {
+        console.error('Error en la paginación:', error);
+        res.status(500).json({ error: 'Error al obtener los datos paginados.' });
+    }
+});
+
+// Ruta para obtener resumen de alumnos por carrera
+router.get('/resumeng-carrerag', async (req, res) => {
+    try {
+        const query = `
+            SELECT c.nombre AS Carrera, COUNT(*) AS Total
+            FROM preinscripciong i
+            JOIN carrerag c ON c.idcarrera = i.idcarrera
+            WHERE i.estado = 'Activo'
+            GROUP BY c.idcarrera;
+        `;
+        const [result] = await db.query(query);
+        res.json(result);
+    } catch (error) {
+        console.error('Error al obtener resumen por carrera:', error);
+        res.status(500).json({ error: 'Error al obtener el resumen.' });
+    }
+});
+
+// Nueva Ruta: Filtrar preinscripciones por carrera
+router.get('/activosg', async (req, res) => {
+    const { idCarrera } = req.query;
+
+    if (!idCarrera) {
+        return res.status(400).json({ error: 'El ID de la carrera es requerido.' });
+    }
+
+    try {
+        const query = `
+            SELECT i.idinscripcion, 
+                   CONCAT(a.apellidos, ', ', a.nombres) AS Alumno, 
+                   a.dni, c.nombre AS Carrera, 
+                   DATE_FORMAT(i.fecha, '%d-%m-%Y %H:%i:%s') AS fecha
+            FROM preinscripciong i
+            JOIN alumno a ON a.idalumno = i.idalumno
+            JOIN carrerag c ON c.idcarrera = i.idcarrera
+            WHERE i.estado = 'Activo' AND i.idcarrera = ?;
+        `;
+        const [result] = await db.query(query, [idCarrera]);
+
+        res.json(result);
+    } catch (error) {
+        console.error('Error al filtrar preinscripciones:', error);
+        res.status(500).json({ error: 'Error al filtrar las preinscripciones.' });
+    }
+});
  
 module.exports = router; 

@@ -48,15 +48,20 @@ app.use(
 
 
 function verificarAutenticacion(req, res, next) {
-    // Excluir la ruta '/cedes' de la autenticación
-    if (req.path === '/cedes' || req.session.user || ['/login', '/registro', '/send-reset-email', '/reset-password', '/update-password'].includes(req.path)) {
-        return next();
+    // Excluir rutas de autenticación
+    if (
+        req.path === '/cedes' || 
+        req.session.user || 
+        ['/login', '/registro', '/send-reset-email', '/reset-password', '/update-password', '/6021.html', '/6034.html'].includes(req.path)
+    ) {
+        return next();  // Si la ruta es válida, se permite el acceso
     } else {
-        res.redirect('/login');
+        res.redirect('/login');  // Si no está autenticado, redirige al login
     }
 }
 
-app.use(verificarAutenticacion); // Aplica el middleware a todas las rutas
+app.use(verificarAutenticacion);  // Aplica el middleware a todas las rutas
+
 
 
 
@@ -563,6 +568,51 @@ app.get('/activos', async (req, res) => {
     } catch (error) {
         console.error('Error al obtener los registros activos:', error);
         res.status(500).json({ error: 'Error al obtener los registros activos' });
+    }
+});
+
+app.get('/activos-paginados', async (req, res) => {
+    const { pagina = 1, limite = 10 } = req.query;
+    const offset = (pagina - 1) * limite;
+
+    try {
+        const query = `
+            SELECT i.idinscripcion, 
+                   CONCAT(a.apellidos, ', ', a.nombres) AS Alumno, 
+                   a.dni, c.nombre AS Carrera, 
+                   DATE_FORMAT(i.fecha, '%d-%m-%Y %H:%i:%s') AS fecha
+            FROM preinscripcion i
+            JOIN alumno a ON a.idalumno = i.idalumno
+            JOIN carreras c ON c.idcarrera = i.idcarrera
+            WHERE i.estado = 'Activo'
+            LIMIT ? OFFSET ?;
+        `;
+        const [result] = await db.query(query, [parseInt(limite), parseInt(offset)]);
+
+        const [totalResult] = await db.query('SELECT COUNT(*) AS total FROM preinscripcion WHERE estado = "Activo"');
+        const total = totalResult[0].total;
+
+        res.json({ registros: result, total });
+    } catch (error) {
+        console.error('Error en la paginación:', error);
+        res.status(500).json({ error: 'Error al obtener los datos paginados.' });
+    }
+});
+
+app.get('/resumen-carreras', async (req, res) => {
+    try {
+        const query = `
+            SELECT c.nombre AS Carrera, COUNT(*) AS Total
+            FROM preinscripcion i
+            JOIN carreras c ON c.idcarrera = i.idcarrera
+            WHERE i.estado = 'Activo'
+            GROUP BY c.idcarrera;
+        `;
+        const [result] = await db.query(query);
+        res.json(result);
+    } catch (error) {
+        console.error('Error al obtener resumen por carrera:', error);
+        res.status(500).json({ error: 'Error al obtener el resumen.' });
     }
 });
 

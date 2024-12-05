@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Inscripciones</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="./estiloAdmin.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Resumen de inscripciones - IES 6034 ANEXO EL GALPÓN</h1>
+        
+        <!-- Filtros y Resumen -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="carrera">Selecciona una Carrera</label>
+                <select id="carrera" class="form-control" onchange="filtrarInscripciones()">
+                    <option value="" disabled selected>Seleccione una carrera</option>
+                </select>
+            </div>
+            <div class="col-md-6 text-right">
+                <p>Total Alumnos: <span id="total-alumnos">0</span></p>
+                <p>Alumnos por Carrera:</p>
+                <ul id="alumnos-por-carrera"></ul>
+            </div>
+        </div>
+
+        <!-- Tabla -->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Alumno</th>
+                    <th>DNI</th>
+                    <th>Carrera</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-preinscripcionesg"></tbody>
+        </table>
+
+        <!-- Botones de Paginación -->
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-primary" onclick="primeraPagina()">Primera</button>
+            <button class="btn btn-secondary" onclick="paginaAnterior()">Anterior</button>
+            <button class="btn btn-secondary" onclick="paginaSiguiente()">Siguiente</button>
+            <button class="btn btn-primary" onclick="ultimaPagina()">Última</button>
+            <button class="btn btn-success" onclick="exportarExcel()">Exportar a Excel</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Instituto de Educación Superior N° 6.021 - ANEXO EL GALPÓN - Todos los derechos reservados</p>
+    </footer>
+
+    <script>
+        // Variables de paginación
+        let paginaActual = 1;
+        const registrosPorPagina = 10;
+    
+        // Cargar carreras en el combobox
+        async function loadCarrera() {
+            try {
+                const response = await fetch('/carrerag');
+                const carreras = await response.json();
+                const carreraSelect = document.getElementById('carrera');
+                carreraSelect.innerHTML = '<option value="" disabled selected>Seleccione una carrera</option>';
+    
+                carreras.forEach(carrera => {
+                    const option = document.createElement('option');
+                    option.value = carrera.idcarrera;
+                    option.textContent = carrera.nombre;
+                    carreraSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error al cargar las carreras:', error);
+            }
+        }
+    
+        // Cargar todas las preinscripciones activas al inicio
+        async function loadPreinscripciones(pagina = 1) {
+            try {
+                const response = await fetch(`/activosg-paginadosg?pagina=${pagina}&limite=${registrosPorPagina}`);
+                const { registros, total } = await response.json();
+                renderTable(registros);
+                mostrarTotalRegistros(total);
+                paginaActual = pagina;
+            } catch (error) {
+                console.error('Error al cargar las preinscripciones:', error);
+            }
+        }
+    
+        // Filtrar preinscripciones por carrera seleccionada
+        async function filtrarPreinscripciones() {
+            const carreraId = document.getElementById('carrera').value;
+    
+            if (!carreraId) {
+                loadPreinscripciones(); // Si no hay carrera seleccionada, mostrar todas las preinscripciones
+                return;
+            }
+    
+            try {
+                const response = await fetch(`/activosg?idCarrera=${carreraId}`);
+                const preinscripciones = await response.json();
+                renderTable(preinscripciones);
+            } catch (error) {
+                console.error('Error al filtrar preinscripciones:', error);
+            }
+        }
+    
+        // Cargar resumen de alumnos por carrera
+        async function loadResumenCarreras() {
+            try {
+                const response = await fetch('/resumeng-carrerag');
+                const resumen = await response.json();
+                const resumenElement = document.getElementById('alumnos-por-carrera');
+                resumenElement.innerHTML = '';
+    
+                resumen.forEach(carrera => {
+                    const li = document.createElement('li');
+                    li.textContent = `${carrera.Carrera}: ${carrera.Total}`;
+                    resumenElement.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error al cargar el resumen por carrera:', error);
+            }
+        }
+    
+        // Renderizar la tabla con los datos
+        function renderTable(preinscripciones) {
+            const tbody = document.getElementById('tabla-preinscripcionesg');
+            tbody.innerHTML = ''; // Limpiar contenido previo
+    
+            preinscripciones.forEach(preinscripcion => {
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td>${preinscripcion.idinscripcion}</td>
+                    <td>${preinscripcion.Alumno}</td>
+                    <td>${preinscripcion.dni}</td>
+                    <td>${preinscripcion.Carrera}</td>
+                    <td>${preinscripcion.fecha}</td>
+                `;
+                tbody.appendChild(fila);
+            });
+        }
+    
+        // Mostrar el total de registros
+        function mostrarTotalRegistros(total) {
+            document.getElementById('total-alumnos').textContent = total;
+        }
+    
+        // Funciones de paginación
+        function paginaAnterior() {
+            if (paginaActual > 1) {
+                loadPreinscripciones(paginaActual - 1);
+            }
+        }
+    
+        function paginaSiguiente() {
+            loadPreinscripciones(paginaActual + 1);
+        }
+    
+        function primeraPagina() {
+            loadPreinscripciones(1);
+        }
+    
+        async function ultimaPagina() {
+            try {
+                const response = await fetch(`/activosg-paginadosg?limite=${registrosPorPagina}`);
+                const { total } = await response.json();
+                const ultima = Math.ceil(total / registrosPorPagina);
+                loadPreinscripciones(ultima);
+            } catch (error) {
+                console.error('Error al cargar la última página:', error);
+            }
+        }
+    
+        // Exportar datos a Excel
+        function exportarExcel() {
+            const tabla = document.querySelector('table');
+            const wb = XLSX.utils.table_to_book(tabla, { sheet: 'Preinscripcionesg' });
+            XLSX.writeFile(wb, 'Preinscripciones IES 6034.xlsx');
+        }
+    
+        // Inicializar la página cargando carreras, preinscripciones y resumen
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCarrera();
+            loadPreinscripciones();
+            loadResumenCarreras();
+    
+            const carreraSelect = document.getElementById('carrera');
+            carreraSelect.addEventListener('change', filtrarPreinscripciones);
+        });
+    </script>
+    
+</body>
+</html>
