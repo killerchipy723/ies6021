@@ -35,7 +35,7 @@ app.use(
         saveUninitialized: false,
         cookie: {
             maxAge: 60 * 60 * 1000, // 1 hora de inactividad
-            secure: true,  // Asegura que solo se usen cookies seguras en HTTPS
+            secure: false,  // Asegura que solo se usen cookies seguras en HTTPS
             httpOnly: true,
             sameSite: 'lax'
         }
