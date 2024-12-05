@@ -11,13 +11,9 @@ const pdf = require('pdfkit');
 const os = require('os'); 
 const generarConstanciaPDF = require('./constanciaPDF'); // Ajusta la ruta según sea necesario
 const galponRouter = require('./galpon'); //
-const cors = require('cors'); 
+const cors = require('cors');
 
 const galponRoutes = require('./galpon');  // Importar las rutas de galpon.js
-
-
-
-
 
 const app = express();
 const port = 3000;
@@ -28,30 +24,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'views')));
 
-
-app.use(cors({
-    origin: 'https://ies6021jcdavalos.online', // Cambia por tu dominio exacto
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true // Permite el envío de cookies y encabezados de sesión
-}));
-
-
-
-
-
 // Configuración de sesión con almacenamiento en MySQL y tiempo de expiración de una hora
 const sessionStore = new MySQLStore({}, db);
 app.use(
     session({
         key: 'session_cookie_name',
-        secret: 'mi_secreto',
+        secret: 'mi_secreto', 
         store: sessionStore,
         resave: false,
         saveUninitialized: false,
         cookie: {
             maxAge: 60 * 60 * 1000, // 1 hora de inactividad
-            secure: true,  // Asegura que solo se usen cookies seguras en HTTPS
+            secure: false,  // Asegura que solo se usen cookies seguras en HTTPS
             httpOnly: true,
             sameSite: 'lax'
         }
