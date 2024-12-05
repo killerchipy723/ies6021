@@ -10,6 +10,9 @@ const fs = require('fs');
 const pdf = require('pdfkit');
 const os = require('os'); 
 const generarConstanciaPDF = require('./constanciaPDF'); // Ajusta la ruta según sea necesario
+const galponRouter = require('./galpon'); //
+
+const galponRoutes = require('./galpon');  // Importar las rutas de galpon.js
 
 
 
@@ -22,6 +25,7 @@ const port = 3000;
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'views')));
 
 
 
@@ -44,14 +48,17 @@ app.use(
 
 
 function verificarAutenticacion(req, res, next) {
-    if (req.session.user || ['/login', '/registro', '/send-reset-email', '/reset-password', '/update-password'].includes(req.path)) {
-        next();
+    // Excluir la ruta '/cedes' de la autenticación
+    if (req.path === '/cedes' || req.session.user || ['/login', '/registro', '/send-reset-email', '/reset-password', '/update-password'].includes(req.path)) {
+        return next();
     } else {
         res.redirect('/login');
     }
 }
 
 app.use(verificarAutenticacion); // Aplica el middleware a todas las rutas
+
+
 
 
 // Ruta para manejar el login
@@ -73,17 +80,41 @@ app.post('/login', async (req, res) => {
                 apellidos: user[0].apellidos
             };
 
-            const nombreCompleto = `${user[0].apellidos}, ${user[0].nombres}`;
-            const idalu = user[0].idalumno;
-            return res.status(200).json({ success: true, nombreCompleto });
+            const [localidadData] = await db.query(
+                `SELECT c.localidad 
+                 FROM alumno a 
+                 JOIN cede c ON c.idcede = a.cede 
+                 WHERE a.idalumno = ?`,
+                [user[0].idalumno]
+            );
+
+            if (localidadData.length > 0) {
+                const localidad = localidadData[0].localidad;
+
+                // Determina la redirección basada en la localidad
+                let redirectTo = '/default.html';                
+                if (localidad === 'Metán') redirectTo = '/portada.html';
+                if (localidad === 'El Galpón') redirectTo = '/elgalpon.html';
+
+
+                return res.status(200).json({
+                    success: true,
+                    nombreCompleto: `${user[0].apellidos}, ${user[0].nombres}`,
+                    redirectTo
+                });
+            } else {
+                return res.status(404).json({ success: false, message: 'Localidad no encontrada.' });
+            }
         } else {
             return res.status(401).json({ success: false, message: 'DNI o contraseña incorrectos.' });
         }
     } catch (error) {
         console.error('Error en la autenticación:', error);
-        return res.status(500).json({ message: 'Error en la autenticación' });
+        return res.status(500).json({ message: 'Error en el servidor.' });
     }
 });
+
+
 
 // Ruta protegida para obtener datos del alumno
 app.get('/datos-alumno',  (req, res) => {
@@ -125,6 +156,9 @@ app.get('/carreras', verificarAutenticacion, async (req, res) => {
         res.status(500).json({ error: 'Error al obtener las carreras' });
     }
 });
+
+app.use(galponRouter)
+
 
 // Ruta para cerrar sesión
 app.get('/logout', (req, res) => {
@@ -229,10 +263,10 @@ app.post('/update-password', async (req, res) => {
 
 // Ruta para manejar el registro de usuarios
 app.post('/registro', async (req, res) => {
-    let { dni1, cuil, apellidos, nombres, fechanac, localidad, correo, telefono, clave1, clave2 } = req.body;
+    let { dni1, cuil, apellidos, nombres, fechanac, localidad, correo, telefono, clave1, clave2, cede } = req.body;
 
-    if (!dni1 || !correo) {
-        return res.status(400).json({ message: 'DNI y correo son obligatorios.' });
+    if (!dni1 || !correo || !cede) {
+        return res.status(400).json({ message: 'DNI, correo y sede son obligatorios.' });
     }
 
     if (clave1 !== clave2) {
@@ -249,8 +283,8 @@ app.post('/registro', async (req, res) => {
         }
 
         await db.query(
-            'INSERT INTO alumno (dni, cuil, apellidos, nombres, fechanac, localidad, correo, telefono, clave) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [dni1, cuil, apellidos, nombres, fechanac, localidad, correo, telefono, clave1]
+            'INSERT INTO alumno (dni, cuil, apellidos, nombres, fechanac, localidad, correo, telefono, clave, cede) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [dni1, cuil, apellidos, nombres, fechanac, localidad, correo, telefono, clave1, cede]
         );
 
         res.status(200).json({ message: 'Registro exitoso', success: true });
@@ -259,6 +293,17 @@ app.post('/registro', async (req, res) => {
         res.status(500).json({ message: 'Error al insertar datos en la base de datos.' });
     }
 });
+
+app.get('/cedes', async (req, res) => {
+    try {
+        const [cedes] = await db.query('SELECT idcede, nombre FROM cede'); // Cambia el nombre de la tabla y columna según tu base de datos
+        res.status(200).json(cedes);
+    } catch (error) {
+        console.error('Error al obtener cedes:', error);
+        res.status(500).json({ message: 'Error al obtener las cedes.' });
+    }
+});
+
 
 
 // TABLA INSCRIPCIONES

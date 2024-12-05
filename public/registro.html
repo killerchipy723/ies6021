@@ -30,25 +30,25 @@
         <div class="form-row">
           <div class="form-group">
             <label for="dni1">DNI</label>
-            <input type="text" id="dni1" name="dni1" required oninput="trimInput(this)" />
+            <input type="text" id="dni1" name="dni1" required />
           </div>
           <div class="form-group">
             <label for="dni2">Repetir DNI</label>
-            <input type="text" id="dni2" name="dni2" required oninput="trimInput(this)" />
+            <input type="text" id="dni2" name="dni2" required />
           </div>
         </div>
-    
+      
         <div class="form-row">
           <div class="form-group">
             <label for="cuil">CUIL</label>
-            <input type="text" id="cuil" name="cuil" required oninput="formatCuil(this)" maxlength="13" />
+            <input type="text" id="cuil" name="cuil" required maxlength="13" />
           </div>
           <div class="form-group">
             <label for="apellidos">Apellidos</label>
             <input type="text" id="apellidos" name="apellidos" required oninput="capitalize(this)" />
           </div>
         </div>
-    
+      
         <div class="form-row">
           <div class="form-group">
             <label for="nombres">Nombres</label>
@@ -60,7 +60,6 @@
               <select id="day" name="day" required>
                 <option value="">Día</option>
               </select>
-          
               <select id="month" name="month" required>
                 <option value="">Mes</option>
                 <option value="1">Enero</option>
@@ -76,14 +75,13 @@
                 <option value="11">Noviembre</option>
                 <option value="12">Diciembre</option>
               </select>
-          
               <select id="year" name="year" required>
                 <option value="">Año</option>
               </select>
             </div>
           </div>
         </div>
-    
+      
         <div class="form-row">
           <div class="form-group">
             <label for="localidad">Localidad</label>
@@ -94,7 +92,7 @@
             <input type="email" id="correo" name="correo" required oninput="trimInput(this)" />
           </div>
         </div>
-    
+      
         <div class="form-row">
           <div class="form-group">
             <label for="telefono">Teléfono (Sin 0 ni 15)</label>
@@ -102,15 +100,26 @@
           </div>
           <div class="form-group">
             <label for="clave1">Contraseña</label>
-            <input type="password" id="clave1" name="clave1" required oninput="trimInput(this)" />
+            <input type="password" id="clave1" name="clave1" required />
           </div>
         </div>
-    
+      
         <div class="form-row">
           <div class="form-group">
             <label for="clave2">Repetir Contraseña</label>
-            <input type="password" id="clave2" name="clave2" required oninput="trimInput(this)"/>
+            <input type="password" id="clave2" name="clave2" required />
           </div>
+          <div class="form-group">
+            <label for="cede">Sede</label>
+            <select id="cede" name="cede" required>
+              <option value="">Selecciona una Sede</option>
+              <!-- Las cedes se llenarán dinámicamente aquí -->
+          </select>
+          
+          </div>
+        </div>
+      
+        <div class="form-row">
           <div class="form-group">
             <label>
               <input type="checkbox" id="acuerdo" name="acuerdo" onclick="toggleSubmitButton()" />
@@ -118,10 +127,11 @@
             </label>
           </div>
         </div>
-    
+      
         <button type="submit" class="button" id="submit-button" disabled>Registrar</button>
         <div class="message-container" id="message-container" style="display: none"></div>
       </form>
+      
     </div>
     
 
@@ -200,12 +210,13 @@
                       cuil: document.getElementById("cuil").value,
                       apellidos: document.getElementById("apellidos").value,
                       nombres: document.getElementById("nombres").value,
-                      fechanac,  // Fecha de nacimiento en formato YYYY-MM-DD
+                      fechanac, // Fecha de nacimiento en formato YYYY-MM-DD
                       localidad: document.getElementById("localidad").value,
                       correo: document.getElementById("correo").value,
                       telefono: document.getElementById("telefono").value,
                       clave1,
                       clave2,
+                      cede: document.getElementById("cede").value,
                   }),
               });
   
@@ -219,7 +230,7 @@
                       window.location.href = "login.html";
                   }, 2000);
               } else {
-                  showMessage(data.message || "Error desconocido", "error"); // Cambiado a data.message
+                  showMessage(data.message || "Error desconocido", "error");
               }
           } catch (error) {
               console.error("Error al enviar el formulario:", error);
@@ -231,7 +242,7 @@
           const messageContainer = document.getElementById("message-container");
           messageContainer.style.display = "block";
           messageContainer.textContent = message;
-          messageContainer.className = type === "error" ? "text-danger" : "text-success"; // Cambia según tu estilo
+          messageContainer.className = type === "error" ? "text-danger" : "text-success";
       }
   
       // Rellenar días
@@ -243,7 +254,7 @@
           daySelect.appendChild(option);
       }
   
-      // Rellenar años (últimos 100 años)
+      // Rellenar años (últimos 70 años)
       const yearSelect = document.getElementById("year");
       const currentYear = new Date().getFullYear();
       for (let year = currentYear - 70; year <= currentYear; year++) {
@@ -252,7 +263,33 @@
           option.textContent = year;
           yearSelect.appendChild(option);
       }
+
+      // loads cedes
+      
+
+      async function loadCedes() {
+    try {
+        const response = await fetch('/cedes');
+        const cedes = await response.json();
+        console.log(cedes);  // Verifica si los datos están llegando correctamente
+        
+        const cedeSelect = document.getElementById("cede");
+        cedes.forEach(cede => {
+            const option = document.createElement("option");
+            option.value = cede.idcede;
+            option.textContent = cede.nombre;
+            cedeSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error("Error al cargar las cedes:", error);
+    }
+}
+
+
+    // Llamar a la función para cargar las cedes cuando se carga la página
+    window.onload = loadCedes;
   </script>
+  
   
   </body>
 </html>
