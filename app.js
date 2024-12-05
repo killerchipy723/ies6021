@@ -30,10 +30,12 @@ app.use(express.static(path.join(__dirname, 'views')));
 
 
 app.use(cors({
-    origin: '*', // Permite solicitudes desde cualquier origen (ajustar según tus necesidades de seguridad)
+    origin: 'https://ies6021jcdavalos.online', // Cambia por tu dominio exacto
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true // Permite el envío de cookies y encabezados de sesión
 }));
+
 
 
 
@@ -49,10 +51,13 @@ app.use(
         saveUninitialized: false,
         cookie: {
             maxAge: 60 * 60 * 1000, // 1 hora de inactividad
-            secure: false // Cambia a true si usas HTTPS
+            secure: true, // Requiere HTTPS
+            httpOnly: true, // Bloquea el acceso a las cookies desde JavaScript del cliente
+            sameSite: 'lax' // Evita problemas con solicitudes cruzadas
         }
     })
 );
+
 
 
 
