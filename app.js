@@ -11,6 +11,7 @@ const pdf = require('pdfkit');
 const os = require('os'); 
 const generarConstanciaPDF = require('./constanciaPDF'); // Ajusta la ruta según sea necesario
 const galponRouter = require('./galpon'); //
+const cors = require('cors');
 
 const galponRoutes = require('./galpon');  // Importar las rutas de galpon.js
 
@@ -28,6 +29,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'views')));
 
 
+app.use(cors({
+    origin: '*', // Permite solicitudes desde cualquier origen (ajustar según tus necesidades de seguridad)
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+
+
 
 // Configuración de sesión con almacenamiento en MySQL y tiempo de expiración de una hora
 const sessionStore = new MySQLStore({}, db);
@@ -40,7 +49,7 @@ app.use(
         saveUninitialized: false,
         cookie: {
             maxAge: 60 * 60 * 1000, // 1 hora de inactividad
-            secure: false // Cambia a true si usas HTTPS
+            secure: true // Cambia a true si usas HTTPS
         }
     })
 );
