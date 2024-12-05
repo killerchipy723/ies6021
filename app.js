@@ -49,7 +49,7 @@ app.use(
         saveUninitialized: false,
         cookie: {
             maxAge: 60 * 60 * 1000, // 1 hora de inactividad
-            secure: true // Cambia a true si usas HTTPS
+            secure: false // Cambia a true si usas HTTPS
         }
     })
 );
