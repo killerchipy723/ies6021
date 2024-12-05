@@ -11,7 +11,7 @@ const pdf = require('pdfkit');
 const os = require('os'); 
 const generarConstanciaPDF = require('./constanciaPDF'); // Ajusta la ruta según sea necesario
 const galponRouter = require('./galpon'); //
-const cors = require('cors');
+const cors = require('cors'); 
 
 const galponRoutes = require('./galpon');  // Importar las rutas de galpon.js
 
@@ -56,17 +56,7 @@ app.use(
             sameSite: 'lax'
         }
     })
-  );
-
-  app.use((req, res, next) => {
-    if (!req.secure && req.get('X-Forwarded-Proto') !== 'https') {
-        return res.redirect('https://' + req.headers.host + req.url);
-    }
-    next();
-});
-
-
-
+  ); 
 
 
 function verificarAutenticacion(req, res, next) {
