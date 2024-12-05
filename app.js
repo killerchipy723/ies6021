@@ -51,12 +51,20 @@ app.use(
         saveUninitialized: false,
         cookie: {
             maxAge: 60 * 60 * 1000, // 1 hora de inactividad
-            secure: true, // Requiere HTTPS
-            httpOnly: true, // Bloquea el acceso a las cookies desde JavaScript del cliente
-            sameSite: 'lax' // Evita problemas con solicitudes cruzadas
+            secure: true,  // Asegura que solo se usen cookies seguras en HTTPS
+            httpOnly: true,
+            sameSite: 'lax'
         }
     })
-);
+  );
+
+  app.use((req, res, next) => {
+    if (!req.secure && req.get('X-Forwarded-Proto') !== 'https') {
+        return res.redirect('https://' + req.headers.host + req.url);
+    }
+    next();
+});
+
 
 
 
