@@ -24,6 +24,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'views')));
 
+
+//cors
+
+const cors = require('cors');
+
+// Configuración de CORS
+const corsOptions = {
+  origin: '*', // Permitir todos los orígenes, o ajusta con el dominio que necesites
+  methods: 'GET,POST,PUT,DELETE',
+  allowedHeaders: 'Content-Type, Authorization',
+};
+
+app.use(cors(corsOptions));
+
+
 // Configuración de sesión con almacenamiento en MySQL y tiempo de expiración de una hora
 const sessionStore = new MySQLStore({}, db);
 app.use(
