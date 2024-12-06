@@ -1,86 +1,11 @@
-<script>
-  // Cargar carreras en el combobox
-  async function loadCarrera() {
-      try {
-          const response = await fetch('/carreras');
-          const carreras = await response.json();
-          const carreraSelect = document.getElementById('carrera');
-          carreraSelect.innerHTML = '<option value="" disabled selected>Seleccione una carrera</option>';
-
-          carreras.forEach(carrera => {
-              const option = document.createElement('option');
-              option.value = carrera.idcarrera;
-              option.textContent = carrera.nombre;
-              carreraSelect.appendChild(option);
-          });
-      } catch (error) {
-          console.error('Error al cargar las carreras:', error);
-      }
-  }
-
-  // Cargar todas las inscripciones activas al inicio
-  async function loadInscripciones() {
-      try {
-          const response = await fetch('/activos');
-          const inscripciones = await response.json();
-          renderTable(inscripciones);
-      } catch (error) {
-          console.error('Error al cargar las inscripciones:', error);
-      }
-  }
-
-  // Filtrar inscripciones por carrera seleccionada
-  async function filtrarInscripciones() {
-      const carreraId = document.getElementById('carrera').value;
-
-      if (!carreraId) {
-          loadInscripciones(); // Si no hay carrera seleccionada, mostrar todas las inscripciones
-          return;
-      }
-
-      try {
-          const response = await fetch(`/activos?idCarrera=${carreraId}`);
-          const inscripciones = await response.json();
-          renderTable(inscripciones);
-      } catch (error) {
-          console.error('Error al filtrar inscripciones:', error);
-      }
-  }
-
-  // Renderizar la tabla con los datos
-  function renderTable(inscripciones) {
-      const tbody = document.getElementById('tabla-inscripciones');
-      tbody.innerHTML = ''; // Limpiar contenido previo
-
-      inscripciones.forEach(inscripcion => {
-          const fila = document.createElement('tr');
-          fila.innerHTML = `
-              <td>${inscripcion.idinscripcion}</td>
-              <td>${inscripcion.Alumno}</td>
-              <td>${inscripcion.dni}</td>
-              <td>${inscripcion.Carrera}</td>
-              <td>${inscripcion.fecha}</td>
-          `;
-          tbody.appendChild(fila);
-      });
-
-      // Mostrar el número de registros
-      mostrarTotalRegistros(inscripciones.length);
-  }
-
-  // Mostrar el total de registros en un elemento al final de la tabla
-  function mostrarTotalRegistros(total) {
-      const totalElement = document.getElementById('total-registros');
-      totalElement.textContent = `Alumnos inscriptos: ${total}`;
-  }
-
-  // Inicializar la página cargando carreras e inscripciones
-  document.addEventListener('DOMContentLoaded', () => {
-      loadCarrera();
-      loadInscripciones();
-
-      // Agregar evento al combobox para filtrar
-      const carreraSelect = document.getElementById('carrera');
-      carreraSelect.addEventListener('change', filtrarInscripciones);
-  });
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IES 6021</title>
+</head>
+<body>
+    <h1>Documento de Prueba</h1>
+</body>
+</html>
