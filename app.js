@@ -16,7 +16,7 @@ const cors = require('cors');
 const galponRoutes = require('./galpon');  // Importar las rutas de galpon.js
 
 const app = express();
-const port = 3000;
+const port = 1986;
  
 // Middleware para servir archivos estáticos y parsear JSON
 app.use(express.static(path.join(__dirname, 'public')));
