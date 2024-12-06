@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'views')));
 
 //cors
 
-const cors = require('cors');
+
 
 // Configuración de CORS
 const corsOptions = {
