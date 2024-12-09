@@ -69,6 +69,8 @@ app.use(
         '/update-password',
         '/6021.html',
         '/6034.html',
+        '/login-usuario', // Nueva ruta para procesar el formulario
+        '/login_usuario.html' // Nueva ruta para servir el formulario de login de usuario
     ];
 
     // Permite acceso si la ruta es pública o si el usuario está autenticado
@@ -79,6 +81,7 @@ app.use(
     // Redirige al login si no está autenticado
     res.redirect('/login');
 }
+
 
 
 
@@ -134,6 +137,51 @@ app.post('/login', async (req, res) => {
         return res.status(500).json({ message: 'Error en el servidor.' });
     }
 });
+
+// login rectorias
+
+app.post('/login-usuario', async (req, res) => {
+    const { usuario, password } = req.body;
+
+    try {
+        const [user] = await db.query(
+            'SELECT u.idusuario, c.localidad AS cede_nombre FROM usuario u JOIN cede c ON u.idcede = c.idcede WHERE u.usuario = ? AND u.clave = ?',
+            [usuario, password]
+        );
+
+        if (user.length > 0) {
+            const cedeNombre = user[0].cede_nombre;
+
+            if (cedeNombre === 'Metán') {
+                return res.json({
+                    success: true,
+                    message: 'Inicio de sesión exitoso. Redirigiendo...',
+                    redirectTo: '/6021.html'
+                });
+            } else if (cedeNombre === 'El Galpón') {
+                return res.json({
+                    success: true,
+                    message: 'Inicio de sesión exitoso. Redirigiendo...',
+                    redirectTo: '/6034.html'
+                });
+            } else {
+                return res.json({
+                    success: false,
+                    message: 'No tiene acceso autorizado a esta cede.'
+                });
+            }
+        } else {
+            return res.json({
+                success: false,
+                message: 'Usuario o contraseña incorrectos.'
+            });
+        }
+    } catch (error) {
+        console.error('Error al autenticar usuario:', error);
+        return res.status(500).json({ success: false, message: 'Error en el servidor.' });
+    }
+});
+
 
 
 

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Usuario</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .alert {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Inicio de Sesión</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="usuario">Usuario</label>
+                <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Ingrese su usuario" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Ingrese su contraseña" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
+        </form>
+        <div class="alert mt-3" id="loginMessage"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $('#loginForm').on('submit', function(e) {
+            e.preventDefault();
+            const usuario = $('#usuario').val();
+            const password = $('#password').val();
+
+            $.post('/login-usuario', { usuario, password }, function(response) {
+                const message = $('#loginMessage');
+                if (response.success) {
+                    message.removeClass('alert-danger').addClass('alert-success').text(response.message).fadeIn();
+                    setTimeout(() => {
+                        window.location.href = response.redirectTo;
+                    }, 2000);
+                } else {
+                    message.removeClass('alert-success').addClass('alert-danger').text(response.message).fadeIn();
+                }
+            }).fail(() => {
+                $('#loginMessage').removeClass('alert-success').addClass('alert-danger').text('Error en el servidor.').fadeIn();
+            });
+        });
+    </script>
+</body>
+</html>
