@@ -409,4 +409,64 @@ footer {
     .nav-link {
         font-size: 0.9rem; /* Ajustar el tamaño del texto en dispositivos muy pequeños */
     }
+
+    #aviso-importante {
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #ffe4b5; /* Color de fondo llamativo */
+        border: 2px solid #ffa500; /* Borde resaltado */
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: left;
+    }
+    
+    #aviso-importante h3 {
+        font-size: 1.8em;
+        color: #ff4500;
+        margin-bottom: 15px;
+        text-align: center;
+        text-transform: uppercase;
+    }
+    
+    .event {
+        margin-bottom: 20px;
+    }
+    
+    .event i {
+        font-size: 1.5em;
+        color: #ff4500;
+        margin-right: 10px;
+    }
+    
+    .event ul {
+        margin: 10px 0;
+        padding-left: 20px;
+        list-style: disc;
+        color: #333;
+        font-size: 1.1em;
+    }
+    
+    .event strong {
+        font-size: 1.2em;
+        color: #ff4500;
+    }
+    
+    @media (max-width: 768px) {
+        #aviso-importante h3 {
+            font-size: 1.5em;
+        }
+    
+        .event i {
+            font-size: 1.2em;
+        }
+    
+        .event strong {
+            font-size: 1em;
+        }
+    
+        .event ul {
+            font-size: 1em;
+        }
+    }
+    
 }
