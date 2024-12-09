@@ -103,31 +103,45 @@
             <section id="preinscripcion">
                 <h2>Preinscripciones a Carreras</h2>
                 <p>Formulario de Preinscripción</p>
-            
-                <div class="card mt-4">
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="carrera" class="form-label">Seleccionar Carrera:</label>
-                            <select class="form-select" id="carrera" required>
-                                <option value="" disabled selected>Seleccione una carrera</option>
-                                <!-- Opciones de carrera aquí -->
-                            </select>
-                        </div>
-            
-                        <!-- Campo oculto para idAlumno -->
-                        <input type="hidden" id="idAlumno" value="<%= idAlumno %>">
-            
-                        <div class="button-container">
-                            <!-- Botón de Enviar Inscripción -->
-                            <button type="button" class="btn btn-primary" id="enviarInscripcion">Enviar Inscripción</button>
-                            
-                            <!-- Botón de Descargar Constancia (inicialmente oculto) -->
-                            <button type="button" class="btn btn-secondary" id="descargarConstancia" style="display: none;">Descargar Constancia</button>
-                        </div>
-                            
-                    </div>
+              
+                <!-- Información sobre los cupos -->
+                <div class="alert alert-warning mt-4" style="font-weight: bold; text-align: center; border: 2px solid #ff9800; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+                  ⚠️ <strong>Importante:</strong> Las preinscripciones a las carreras están sujetas a un cupo máximo. 
+                  <br> Aquellos que superen este límite quedarán preinscriptos como <span style="color: red;">Suplentes</span>.
                 </div>
-            </section>
+              
+                <div class="card mt-4">
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <label for="carrera" class="form-label">Seleccionar Carrera:</label>
+                      <select class="form-select" id="carrera" required>
+                        <option value="" disabled selected>Seleccione una carrera</option>
+                        <!-- Opciones de carrera aquí -->
+                      </select>
+                    </div>
+              
+                    <!-- Campo oculto para idAlumno -->
+                    <input type="hidden" id="idAlumno" value="<%= idAlumno %>" />
+              
+                    <div class="button-container">
+                      <!-- Botón de Enviar Inscripción -->
+                      <button type="button" class="btn btn-primary" id="enviarInscripcion">
+                        Enviar Inscripción
+                      </button>
+              
+                      <!-- Botón de Descargar Constancia (inicialmente oculto) -->
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="descargarConstancia"
+                        style="display: none"
+                      >
+                        Descargar Constancia
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </section>
     
             <section id="documentacion">
                 <h2>Descarga Documentación</h2>
