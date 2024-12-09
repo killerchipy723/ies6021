@@ -58,22 +58,27 @@ app.use(
   ); 
 
 
-function verificarAutenticacion(req, res, next) {
-    // Excluir rutas de autenticación
-    if (
-        req.path === '/cedes' || 
-        req.session.user || 
-        ['/login', '/registro', '/send-reset-email', '/reset-password', '/update-password', '/6021.html', '/6034.html'].includes(req.path)
-    ) {
-        return next();  // Si la ruta es válida, se permite el acceso
-    } else {
-        res.redirect('/login');  // Si no está autenticado, redirige al login
+  function verificarAutenticacion(req, res, next) {
+    // Define rutas públicas
+    const rutasPublicas = [
+        '/cedes',
+        '/login',
+        '/registro',
+        '/send-reset-email',
+        '/reset-password',
+        '/update-password',
+        '/6021.html',
+        '/6034.html',
+    ];
+
+    // Permite acceso si la ruta es pública o si el usuario está autenticado
+    if (rutasPublicas.includes(req.path) || req.session.user) {
+        return next();
     }
+
+    // Redirige al login si no está autenticado
+    res.redirect('/login');
 }
-
-app.use(verificarAutenticacion);  // Aplica el middleware a todas las rutas
-
-
 
 
 
@@ -161,7 +166,7 @@ app.get('/login', (req, res) => {
 });
 
 // Ruta protegida para obtener las carreras activas
-app.get('/carreras', verificarAutenticacion, async (req, res) => {
+app.get('/carreras', async (req, res) => {
     const query = "SELECT idcarrera, nombre, tipo, duracion, estado FROM carreras WHERE estado = 'Activo'";
 
     try {

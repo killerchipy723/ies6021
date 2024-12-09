@@ -7,7 +7,7 @@ const generarConstanciaPDFg = require('./constanciaPDFg'); // Ajusta la ruta seg
 
 
 // Ruta para obtener carreras activas
-router.get('/carrerasg', async (req, res) => {
+router.get('/carrerag', async (req, res) => {
     const query = "SELECT idcarrera, nombre, tipo, duracion, estado FROM carrerag WHERE estado = 'Activo'";
 
     try {

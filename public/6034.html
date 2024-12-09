@@ -18,7 +18,7 @@
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="carrera">Selecciona una Carrera</label>
-                <select id="carrera" class="form-control" onchange="filtrarInscripciones()">
+                <select id="carrerass" class="form-control" onchange="filtrarInscripciones()">
                     <option value="" disabled selected>Seleccione una carrera</option>
                 </select>
             </div>
@@ -68,7 +68,7 @@
             try {
                 const response = await fetch('/carrerag');
                 const carreras = await response.json();
-                const carreraSelect = document.getElementById('carrera');
+                const carreraSelect = document.getElementById('carrerass');
                 carreraSelect.innerHTML = '<option value="" disabled selected>Seleccione una carrera</option>';
     
                 carreras.forEach(carrera => {
@@ -97,7 +97,7 @@
     
         // Filtrar preinscripciones por carrera seleccionada
         async function filtrarPreinscripciones() {
-            const carreraId = document.getElementById('carrera').value;
+            const carreraId = document.getElementById('carrerass').value;
     
             if (!carreraId) {
                 loadPreinscripciones(); // Si no hay carrera seleccionada, mostrar todas las preinscripciones
@@ -193,7 +193,7 @@
             loadPreinscripciones();
             loadResumenCarreras();
     
-            const carreraSelect = document.getElementById('carrera');
+            const carreraSelect = document.getElementById('carrerass');
             carreraSelect.addEventListener('change', filtrarPreinscripciones);
         });
     </script>
