@@ -226,6 +226,23 @@ app.get('/carreras', async (req, res) => {
     }
 });
 
+// ruta para obtener todas las carreras activas o inactivas
+
+// Ruta protegida para obtener las carreras activas
+app.get('/carrerast', async (req, res) => {
+    const query = "SELECT idcarrera, nombre, tipo, duracion, estado FROM carreras";
+
+    try {
+        const [results] = await db.query(query);
+        res.json(results);
+    } catch (err) {
+        console.error('Error al obtener las carreras:', err);
+        res.status(500).json({ error: 'Error al obtener las carreras' });
+    }
+});
+
+
+
 app.use(galponRouter)
 
 

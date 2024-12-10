@@ -289,7 +289,7 @@ router.get('/activosg', async (req, res) => {
             FROM preinscripciong i
             JOIN alumno a ON a.idalumno = i.idalumno
             JOIN carrerag c ON c.idcarrera = i.idcarrera
-            WHERE i.estado = 'Activo' AND i.idcarrera = ?;
+            WHERE  i.idcarrera = ?;
         `;
         const [result] = await db.query(query, [idCarrera]);
 

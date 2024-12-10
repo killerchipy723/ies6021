@@ -66,7 +66,7 @@ const registrosPorPagina = 10;
 // Cargar carreras en el combobox
 async function loadCarrera() {
     try {
-        const response = await fetch('/carreras');
+        const response = await fetch('/carrerast');
         const carreras = await response.json();
         const carreraSelect = document.getElementById('carrera');
         carreraSelect.innerHTML = '<option value="" disabled selected>Seleccione una carrera</option>';
