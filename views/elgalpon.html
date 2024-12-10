@@ -194,7 +194,7 @@ function showSection(sectionId) {
 // Cargar las carreras en la tabla
 async function loadCarreras() {
     try {
-        const response = await fetch('/carrerasg');
+        const response = await fetch('/carrerag');
         const carreras = await response.json();
         const tableBody = document.getElementById('carrera-table-body');
         tableBody.innerHTML = '';
@@ -217,7 +217,7 @@ async function loadCarreras() {
 // Cargar las carreras en el selector
 async function loadCarrera() {
     try {
-        const response = await fetch('/carrerasg');
+        const response = await fetch('/carrerag');
         const carreras = await response.json();
         const carreraSelect = document.getElementById('carrera');
         carreraSelect.innerHTML = '<option value="" disabled selected>Seleccione una carrera</option>';
