@@ -233,8 +233,8 @@ router.get('/activosg-paginadosg', async (req, res) => {
     try {
         const query = `
             SELECT i.idinscripcion, 
-                   CONCAT(a.apellidos, ', ', a.nombres) AS Alumno, 
-                   a.dni, c.nombre AS Carrera, 
+                   CONCAT(a.apellidos, ', ', a.nombres) AS Alumno,
+                   a.dni,a.telefono,a.correo, c.nombre AS Carrera, 
                    DATE_FORMAT(i.fecha, '%d-%m-%Y %H:%i:%s') AS fecha
             FROM preinscripciong i
             JOIN alumno a ON a.idalumno = i.idalumno

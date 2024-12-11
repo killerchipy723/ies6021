@@ -13,20 +13,31 @@
 <body>
     <div class="container mt-5">
         <h1 class="text-center mb-4">Resumen de inscripciones - IES 6021 JC DAVALOS</h1>
+
+        <div class="col-md-12" style="padding: 20px; background-color: #f9f9f9; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                <h3 style="color: #007bff; margin: 0;">Resumen de Alumnos por carrera</h3>
+                <div style="display: flex; align-items: center; font-size: 1rem;">
+                    <span style="font-weight: bold; margin-right: 5px;">Total Alumnos Inscriptos:</span>
+                    <span id="total-alumnos" style="color: #28a745; font-weight: bold;">0</span>
+                </div>
+            </div>
+            <ul id="alumnos-por-carrera" style="list-style: none; padding: 0; margin: 0;">
+                <!-- Las carreras y barras de progreso se generarán dinámicamente -->
+            </ul>
+        </div>
+        
+                
         
         <!-- Filtros y Resumen -->
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="carrera">Selecciona una Carrera</label>
+                <label for="carrera">Filtrar por Carrera</label>
                 <select id="carrera" class="form-control" onchange="filtrarInscripciones()">
                     <option value="" disabled selected>Seleccione una carrera</option>
                 </select>
             </div>
-            <div class="col-md-6 text-right">
-                <p>Total Alumnos: <span id="total-alumnos">0</span></p>
-                <p>Alumnos por Carrera:</p>
-                <ul id="alumnos-por-carrera"></ul>
-            </div>
+            
         </div>
 
         <!-- Tabla -->
@@ -36,6 +47,8 @@
                     <th>ID</th>
                     <th>Alumno</th>
                     <th>DNI</th>
+                    <th>Teléfono</th>
+                    <th>Correo</th>
                     <th>Carrera</th>
                     <th>Fecha</th>
                 </tr>
@@ -122,14 +135,44 @@ async function loadResumenCarreras() {
         resumenElement.innerHTML = '';
 
         resumen.forEach(carrera => {
+            // Crear el contenedor principal
             const li = document.createElement('li');
-            li.textContent = `${carrera.Carrera}: ${carrera.Total}`;
+
+            // Nombre de la carrera
+            const carreraNombre = document.createElement('span');
+            carreraNombre.className = 'carrera-nombre';
+            carreraNombre.textContent = carrera.Carrera;
+
+            // Contenedor de la barra
+            const barraContenedor = document.createElement('div');
+            barraContenedor.className = 'barra-contenedor';
+
+            // Barra de progreso
+            const barraProgreso = document.createElement('div');
+            barraProgreso.className = 'barra-progreso';
+            barraProgreso.style.width = `${carrera.Porcentaje}%`; // Ajusta el ancho basado en el porcentaje
+
+            barraContenedor.appendChild(barraProgreso);
+
+            // Total de alumnos por carrera
+            const carreraTotal = document.createElement('span');
+            carreraTotal.className = 'carrera-total';
+            carreraTotal.textContent = carrera.Total;
+
+            // Agregar elementos al li
+            li.appendChild(carreraNombre);
+            li.appendChild(barraContenedor);
+            li.appendChild(carreraTotal);
+
+            // Agregar el li a la lista
             resumenElement.appendChild(li);
         });
     } catch (error) {
         console.error('Error al cargar el resumen por carrera:', error);
     }
 }
+
+
 
 // Renderizar la tabla con los datos
 function renderTable(inscripciones) {
@@ -142,6 +185,8 @@ function renderTable(inscripciones) {
             <td>${inscripcion.idinscripcion}</td>
             <td>${inscripcion.Alumno}</td>
             <td>${inscripcion.dni}</td>
+            <td>${inscripcion.telefono}</td>
+            <td>${inscripcion.correo}</td>
             <td>${inscripcion.Carrera}</td>
             <td>${inscripcion.fecha}</td>
         `;

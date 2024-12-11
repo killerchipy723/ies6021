@@ -1,3 +1,4 @@
+/* Estilos básicos */
 body {
     background-color: #f8f9fa;
     font-family: 'Arial', sans-serif;
@@ -8,6 +9,7 @@ body {
     flex-direction: column;
 }
 
+/* Header */
 header {
     background-color: #343a40;
     color: white;
@@ -36,17 +38,19 @@ header h1 {
     letter-spacing: 1px;
 }
 
+/* Contenedor principal */
 .container {
     flex-grow: 1;
-    margin-top: 30px;
+    margin: 30px auto 70px;
     background: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 70px;
     overflow-x: auto;
+    max-width: 1200px;
 }
 
+/* Tabla */
 .table {
     font-size: 12px;
     border-collapse: collapse;
@@ -65,12 +69,14 @@ header h1 {
     color: white;
 }
 
+/* Total de registros */
 #total-registros {
     font-weight: bold;
     text-align: right;
     margin-top: 10px;
 }
 
+/* Footer */
 footer {
     background-color: #343a40;
     color: white;
@@ -81,8 +87,65 @@ footer {
     bottom: 0;
     left: 0;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-    height: 60px;
 }
+
+/* Lista de alumnos por carrera */
+/* Lista de alumnos por carrera */
+#alumnos-por-carrera {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+}
+
+#alumnos-por-carrera li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px; /* Espacio reducido */
+    padding: 5px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+#alumnos-por-carrera li:last-child {
+    border-bottom: none;
+}
+
+/* Nombre de la carrera */
+.carrera-nombre {
+    flex: 2; /* Ajusta el espacio para el nombre */
+    font-weight: bold;
+    font-size: 0.8rem; /* Tamaño compacto */
+    color: #333;
+    white-space: nowrap; /* Evita que se corten nombres largos */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Muestra puntos suspensivos si el texto es muy largo */
+}
+
+/* Contenedor de la barra de progreso */
+.barra-contenedor {
+    flex: 3; /* Ajusta el espacio para las barras */
+    background-color: #e9ecef;
+    border-radius: 5px;
+    overflow: hidden;
+    height: 6px; /* Altura compacta */
+    margin: 0 10px; /* Separación horizontal */
+}
+
+/* Barra de progreso */
+.barra-progreso {
+    background-color: #007bff;
+    height: 100%;
+    transition: width 0.5s ease; /* Animación suave */
+}
+
+/* Total por carrera */
+.carrera-total {
+    flex: 1; /* Espacio ajustado para el total */
+    font-size: 0.8rem; /* Tamaño compacto */
+    color: #007bff;
+    text-align: right;
+}
+
 
 /* Responsividad */
 @media (max-width: 768px) {

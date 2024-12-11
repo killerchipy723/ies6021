@@ -625,7 +625,7 @@ app.get('/activos', async (req, res) => {
     let query = `
         SELECT i.idinscripcion, 
                CONCAT(a.apellidos, ', ', a.nombres) AS Alumno, 
-               a.dni, 
+               a.dni, a.telefono,a.correo,
                c.nombre AS Carrera, 
                DATE_FORMAT(i.fecha, '%d-%m-%Y %H:%i:%s') AS fecha
         FROM preinscripcion i
@@ -660,7 +660,7 @@ app.get('/activos-paginados', async (req, res) => {
         const query = `
             SELECT i.idinscripcion, 
                    CONCAT(a.apellidos, ', ', a.nombres) AS Alumno, 
-                   a.dni, c.nombre AS Carrera, 
+                   a.dni, a.telefono,a.correo, c.nombre AS Carrera, 
                    DATE_FORMAT(i.fecha, '%d-%m-%Y %H:%i:%s') AS fecha
             FROM preinscripcion i
             JOIN alumno a ON a.idalumno = i.idalumno
