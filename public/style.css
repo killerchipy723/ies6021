@@ -469,6 +469,11 @@ footer {
         }
     }
 
+    .btn-equal i {
+        margin-right: 8px; /* Espacio ajustable */
+      }
+      
+
 
     .btn-equal {
         display: inline-flex;
