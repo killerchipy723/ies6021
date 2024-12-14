@@ -468,5 +468,24 @@ footer {
             font-size: 1em;
         }
     }
+
+
+    .btn-equal {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%; /* Ancho total dentro de la columna */
+        height: 60px; /* Altura uniforme */
+        font-size: 16px; /* Texto más legible */
+        border-radius: 8px; /* Bordes redondeados */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
+        transition: transform 0.2s, box-shadow 0.2s; /* Efecto al pasar el cursor */
+      }
+      
+      .btn-equal:hover {
+        transform: translateY(-3px); /* Efecto de elevación */
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Sombra más intensa */
+      }
+      
     
 }
