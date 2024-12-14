@@ -267,6 +267,65 @@ footer {
     }
 }
 
+/*estilos menu*/
+/* Estilos para el menú de navegación */
+/* Ajustes del menú */
+#menu .nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Espacio entre ícono y texto */
+    padding: 8px 16px; /* Botones más compactos */
+    font-size: 14px; /* Tamaño de fuente más pequeño */
+    font-weight: 500;
+    text-transform: capitalize;
+    color: white;
+    background: linear-gradient(135deg, #3b82f6, #1e3a8a); /* Degradado azul más moderno */
+    border-radius: 6px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#menu .nav-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(135deg, #1e3a8a, #162d63); /* Más oscuro en hover */
+}
+
+/* Estilo para el header */
+header {
+    background-color: #1e293b; /* Azul oscuro neutro */
+    color: #ffffff;
+    padding: 15px 0; /* Menos altura */
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Compactar tablas */
+.table.table-striped.table-bordered th,
+.table.table-striped.table-bordered td {
+    padding: 8px 10px; /* Celdas más compactas */
+    font-size: 0.85rem; /* Fuente más pequeña */
+}
+
+/* Color de fondo alternado en filas */
+.table.table-striped.table-bordered tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Fondo más claro */
+}
+
+/* Fondo principal más neutro */
+body {
+    background-color: #e5e7eb; /* Gris claro neutro */
+    color: #333;
+}
+
+/* Ajustar tamaño general de íconos */
+#menu .nav-link i {
+    font-size: 16px; /* Íconos más pequeños */
+}
+
+
 
 /* Aplica solo a tablas con las clases table, table-striped y table-bordered */
 .table.table-striped.table-bordered {
