@@ -450,47 +450,57 @@ footer {
         font-size: 1.2em;
         color: #ff4500;
     }
-    
-    @media (max-width: 768px) {
-        #aviso-importante h3 {
-            font-size: 1.5em;
-        }
-    
-        .event i {
-            font-size: 1.2em;
-        }
-    
-        .event strong {
-            font-size: 1em;
-        }
-    
-        .event ul {
-            font-size: 1em;
-        }
+
+    /* Contenedor principal para los botones */
+.button-container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los botones se ajusten en varias filas */
+    justify-content: space-between; /* Distribución uniforme entre botones */
+    gap: 20px; /* Espaciado uniforme entre botones */
+    margin: 20px 0; /* Espaciado superior e inferior */
+  }
+  
+  /* Botones individuales */
+  .button-wrapper {
+    flex: 1 1 calc(33.33% - 20px); /* Ancho flexible para que se ajusten 3 botones por fila */
+    display: flex;
+    justify-content: center; /* Centra el contenido del botón */
+  }
+  
+  .btn-equal {
+    display: flex; /* Para alinear ícono y texto */
+    align-items: center; /* Centrar verticalmente */
+    justify-content: center; /* Centrar horizontalmente */
+    width: 100%; /* Llenar el contenedor del botón */
+    height: 60px; /* Altura consistente */
+    font-size: 16px; /* Tamaño del texto */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+    transition: transform 0.2s, box-shadow 0.2s; /* Efecto al pasar el cursor */
+    text-align: center; /* Centrar texto */
+  }
+  
+  .btn-equal i {
+    margin-right: 8px; /* Espacio entre ícono y texto */
+  }
+  
+  .btn-equal:hover {
+    transform: translateY(-3px); /* Efecto de elevación */
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+  }
+  
+  /* Responsividad para pantallas pequeñas */
+  @media (max-width: 768px) {
+    .button-wrapper {
+      flex: 1 1 100%; /* Botones ocupan el ancho completo */
     }
-
-    .btn-equal i {
-        margin-right: 8px; /* Espacio ajustable */
-      }
-      
-
-
+  
     .btn-equal {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%; /* Ancho total dentro de la columna */
-        height: 60px; /* Altura uniforme */
-        font-size: 16px; /* Texto más legible */
-        border-radius: 8px; /* Bordes redondeados */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
-        transition: transform 0.2s, box-shadow 0.2s; /* Efecto al pasar el cursor */
-      }
-      
-      .btn-equal:hover {
-        transform: translateY(-3px); /* Efecto de elevación */
-        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Sombra más intensa */
-      }
+      height: 50px; /* Botones más compactos */
+      font-size: 14px; /* Texto más pequeño */
+    }
+  }
+  
       
     
 }
