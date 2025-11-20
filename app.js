@@ -19,10 +19,10 @@ const app = express();
 const port = 1986;
 
 // -------------- Quitar esta ruta cuando se activen las preincipciones --------------------------
-app.get('/', (req, res) => {
+/*app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index2.html'));
 });
-
+*/
  
 // Middleware para servir archivos estáticos y parsear JSON
 app.use(express.static(path.join(__dirname, 'public')));
