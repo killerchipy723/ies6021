@@ -501,11 +501,11 @@ app.post('/inscripciones/nueva', async (req, res) => {
     }
 
     const fechaActual = new Date();
-    fechaActual.setHours(fechaActual.getHours() - 3); // Restar 3 horas
+    fechaActual.setHours(fechaActual.getHours() - 3);
     const fechaFormateada = fechaActual.toISOString().slice(0, 19).replace('T', ' ');
 
     try {
-        // Consultar si ya existe una inscripción activa para el alumno
+        // 1️⃣ Verificar si el alumno ya tiene una inscripción activa
         const [existingInscription] = await db.query(
             'SELECT estado FROM preinscripcion WHERE idalumno = ? AND estado = "Activo"',
             [idAlumno]
@@ -514,33 +514,48 @@ app.post('/inscripciones/nueva', async (req, res) => {
         if (existingInscription.length > 0) {
             return res.status(400).json({
                 success: false,
-                message: 'Ya tienes una inscripción activa. No puedes inscribirte en dos carreras al mismo tiempo'
+                message: 'Ya tienes una inscripción activa. No puedes inscribirte en dos carreras al mismo tiempo.'
             });
         }
 
-        // Verificar el número de inscripciones para la carrera seleccionada
+        // 2️⃣ Obtener tipo de carrera (PROFESORADO / TECNICATURA)
+        const [carreraData] = await db.query(
+            'SELECT tipo FROM carreras WHERE idcarrera = ?',
+            [idCarrera]
+        );
+
+        if (carreraData.length === 0) {
+            return res.status(404).json({ success: false, message: 'Carrera no encontrada.' });
+        }
+
+        const tipoCarrera = carreraData[0].tipo;
+
+        // Asignar cupos según tipo
+        const cupoMaximo = tipoCarrera === "PROFESORADO" ? 80 : 100;
+
+        // 3️⃣ Contar inscripciones activas de esa carrera
         const [countResults] = await db.query(
             'SELECT COUNT(*) AS total FROM preinscripcion WHERE idcarrera = ? AND estado = "Activo"',
             [idCarrera]
         );
-        const inscripcionesActivas = countResults[0]?.total || 0;
 
-        // Definir el límite según la carrera
-        const limiteInscripciones = idCarrera === 1 ? 3 : 2;
+        const inscripcionesActivas = countResults[0].total;
 
-        // Validar el límite y generar advertencia si se alcanza
-        let mensajeAdvertencia = null;
-        if (inscripcionesActivas >= limiteInscripciones) {
-            mensajeAdvertencia = 'Se alcanzó el límite de preinscripciones permitidas. Ud será inscrito como suplente.';
+        // 4️⃣ Verificar si el cupo está lleno
+        if (inscripcionesActivas >= cupoMaximo) {
+            return res.status(400).json({
+                success: false,
+                message: `El cupo para esta carrera (${tipoCarrera}) está lleno. Cupo máximo: ${cupoMaximo} alumnos.`
+            });
         }
 
-        // Insertar la inscripción en la base de datos
+        // 5️⃣ Insertar inscripción
         await db.query(
             'INSERT INTO preinscripcion (idalumno, idcarrera, fecha, estado) VALUES (?, ?, ?, ?)',
             [idAlumno, idCarrera, fechaFormateada, 'Activo']
         );
 
-        // Generar el PDF y responder con el mensaje y enlace de descarga
+        // 6️⃣ Obtener datos de la inscripción para generar el PDF
         const [inscripciones] = await db.query(
             `SELECT i.idinscripcion, CONCAT(a.apellidos, ', ', a.nombres) AS Alumno, 
                     a.dni, c.nombre AS Carrera, 
@@ -548,7 +563,8 @@ app.post('/inscripciones/nueva', async (req, res) => {
              FROM preinscripcion i
              JOIN alumno a ON a.idalumno = i.idalumno
              JOIN carreras c ON c.idcarrera = i.idcarrera
-             WHERE a.idalumno = ? AND i.estado = 'Activo'`, [idAlumno]
+             WHERE a.idalumno = ? AND i.estado = 'Activo'`,
+            [idAlumno]
         );
 
         if (inscripciones.length > 0) {
@@ -559,13 +575,20 @@ app.post('/inscripciones/nueva', async (req, res) => {
 
             const pdfPath = path.join(pdfDir, `ConstanciaInsc-N°_${inscripcion.idinscripcion}.pdf`);
 
-            await generarConstanciaPDF(inscripcion.idinscripcion, inscripcion.Carrera, inscripcion.fecha, 'Activo', inscripcion.Alumno, inscripcion.dni);
+            await generarConstanciaPDF(
+                inscripcion.idinscripcion,
+                inscripcion.Carrera,
+                inscripcion.fecha,
+                'Activo',
+                inscripcion.Alumno,
+                inscripcion.dni
+            );
 
             const downloadUrl = `/pdfs/ConstanciaInsc-N°${inscripcion.idinscripcion}.pdf`;
-            return res.json({ 
-                success: true, 
-                downloadUrl, 
-                message: mensajeAdvertencia || 'Inscripción realizada con éxito' 
+            return res.json({
+                success: true,
+                downloadUrl,
+                message: 'Inscripción realizada con éxito'
             });
         } else {
             res.status(404).json({ success: false, message: 'Inscripción no encontrada' });
@@ -573,6 +596,100 @@ app.post('/inscripciones/nueva', async (req, res) => {
     } catch (error) {
         console.error('Error al realizar la inscripción:', error);
         res.status(500).json({ success: false, message: 'Error al realizar la inscripción' });
+    }
+});
+
+
+// RUTA PARA MOSTRAR LOS CUPOS DISPONIBLES POR CARRERA
+app.get('/carreras/cupos', async (req, res) => {
+    try {
+        // Obtener todas las carreras activas
+        const [carreras] = await db.query(
+            `SELECT idcarrera, nombre, tipo 
+             FROM carreras 
+             WHERE estado = 'Activo'`
+        );
+
+        let dataCupos = [];
+
+        for (let carrera of carreras) {
+            const cupoMaximo = carrera.tipo === "PROFESORADO" ? 80 : 100;
+
+            // Contar inscripciones activas por carrera
+            const [result] = await db.query(
+                `SELECT COUNT(*) AS total 
+                 FROM preinscripcion 
+                 WHERE idcarrera = ? AND estado = 'Activo'`,
+                [carrera.idcarrera]
+            );
+
+            const inscriptos = result[0].total;
+            const disponibles = cupoMaximo - inscriptos;
+
+            dataCupos.push({
+                idcarrera: carrera.idcarrera,
+                nombre: carrera.nombre,
+                tipo: carrera.tipo,
+                cupoMaximo,
+                inscriptos,
+                disponibles
+            });
+        }
+
+        res.status(200).json({ success: true, carreras: dataCupos });
+
+    } catch (error) {
+        console.error("Error al obtener cupos:", error);
+        res.status(500).json({ success: false, message: "Error al obtener cupos" });
+    }
+});
+
+//CUPOS DE CARRERAS
+
+// RUTA PARA MOSTRAR EL CUPO DE UNA SOLA CARRERA (POR ID)
+app.get('/carreras/cupos/:id', async (req, res) => {
+    const idCarrera = req.params.id;
+
+    try {
+        // Obtener datos de la carrera
+        const [datos] = await db.query(
+            `SELECT idcarrera, nombre, tipo 
+             FROM carreras 
+             WHERE idcarrera = ? AND estado = 'Activo'`,
+            [idCarrera]
+        );
+
+        if (datos.length === 0) {
+            return res.json({ success: false, message: "Carrera no encontrada" });
+        }
+
+        const carrera = datos[0];
+        const cupoMaximo = carrera.tipo === "PROFESORADO" ? 80 : 100;
+
+        // Contar cuántos inscriptos activos tiene esa carrera
+        const [count] = await db.query(
+            `SELECT COUNT(*) AS total 
+             FROM preinscripcion 
+             WHERE idcarrera = ? AND estado = 'Activo'`,
+            [idCarrera]
+        );
+
+        const inscriptos = count[0].total;
+        const disponibles = cupoMaximo - inscriptos;
+
+        return res.json({
+            success: true,
+            idcarrera: carrera.idcarrera,
+            nombre: carrera.nombre,
+            tipo: carrera.tipo,
+            cupoMaximo,
+            inscriptos,
+            restantes: disponibles
+        });
+
+    } catch (error) {
+        console.error("Error obteniendo cupo:", error);
+        return res.json({ success: false, message: "Error al obtener cupo" });
     }
 });
 

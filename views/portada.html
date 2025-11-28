@@ -161,7 +161,7 @@
             <!-- Información sobre los cupos -->
             <div class="alert alert-warning mt-4" style="font-weight: bold; text-align: center; border: 2px solid #ff9800; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
               ⚠️ <strong>Importante:</strong> Las preinscripciones a las carreras están sujetas a un cupo máximo. 
-              <br> Aquellos que superen este límite quedarán preinscriptos como <span style="color: red;">Suplentes</span>.
+              <br> Una vez superado los límites las preinscripciones virtuales quedarán <span style="color: red;">Cerradas</span>.
             </div>
           
             <div class="card mt-4">
@@ -172,6 +172,12 @@
                     <option value="" disabled selected>Seleccione una carrera</option>
                     <!-- Opciones de carrera aquí -->
                   </select>
+                  <!-- Mostrar cupos disponibles -->
+<div id="infoCupo" 
+     class="alert alert-info mt-3" 
+     style="display:none; font-weight:bold; border-radius:10px;">
+</div>
+
                 </div>
           
                 <!-- Campo oculto para idAlumno -->
@@ -243,13 +249,6 @@
               </div>
             </div>
           </div>
-          
-          
-
-         
-
-
-
         </section>
       </div>
     </main>
@@ -464,5 +463,62 @@
         showSection("portada");
       };
     </script>
+    <script>
+// Mostrar cupo al cambiar carrera
+document.getElementById("carrera").addEventListener("change", async () => {
+    const idCarrera = document.getElementById("carrera").value;
+    const infoDiv = document.getElementById("infoCupo");
+
+    if (!idCarrera) {
+        infoDiv.style.display = "none";
+        return;
+    }
+
+    try {
+        const response = await fetch(`/carreras/cupos/${idCarrera}`);
+        const data = await response.json();
+
+        if (!data.success) {
+            infoDiv.style.display = "none";
+            return;
+        }
+
+        const { nombre, tipo, cupoMaximo, inscriptos, restantes } = data;
+
+        infoDiv.style.display = "block";
+
+        // Colores dinámicos según disponibilidad
+        if (restantes <= 0) {
+            infoDiv.className = "alert alert-danger mt-3";
+            infoDiv.innerHTML = `
+                <strong>${nombre}</strong><br>
+                ⛔ Cupo COMPLETO.  
+                <br>Si te inscribís quedarás como <span style="color:red;">Suplente</span>.
+            `;
+        } 
+        else if (restantes <= 10) {
+            infoDiv.className = "alert alert-warning mt-3";
+            infoDiv.innerHTML = `
+                <strong>${nombre}</strong><br>
+                ⚠️ Últimos <strong>${restantes}</strong> cupos disponibles.
+            `;
+        } 
+        else {
+            infoDiv.className = "alert alert-info mt-3";
+            infoDiv.innerHTML = `
+                <strong>${nombre}</strong><br>
+                Cupo máximo: <strong>${cupoMaximo}</strong><br>
+                Inscriptos: <strong>${inscriptos}</strong><br>
+                Disponibles: <strong>${restantes}</strong>
+            `;
+        }
+
+    } catch (error) {
+        console.error("Error al obtener cupos:", error);
+    }
+});
+</script>
+
+
   </body>
 </html>
