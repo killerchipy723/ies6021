@@ -388,7 +388,7 @@ app.post('/registro', async (req, res) => {
 
 app.get('/cedes', async (req, res) => {
     try {
-        const [cedes] = await db.query('SELECT idcede, nombre FROM cede'); // Cambia el nombre de la tabla y columna según tu base de datos
+        const [cedes] = await db.query("SELECT idcede, nombre FROM cede where estado = 'Activo'"); // Cambia el nombre de la tabla y columna según tu base de datos
         res.status(200).json(cedes);
     } catch (error) {
         console.error('Error al obtener cedes:', error);
