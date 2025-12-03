@@ -1,486 +1,514 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Instituto de Educación Superior N° 6021 Juan Carlos Dávalos</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    />
-    <link rel="icon" type="image/jpg" href="./esc.ico" />
-    <link rel="stylesheet" href="./style.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-      rel="stylesheet"
-    />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instituto de Educación Superior N° 6021 Juan Carlos Dávalos</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link rel="icon" type="image/jpg" href="./esc.ico" />
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-  <body>
-    <header class="bg-primary text-white p-3">
-      <div class="container d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center">
-          <span class="student-icon me-2"
-            ><i class="fas fa-user-graduate"></i
-          ></span>
-          <h1 class="h4" id="welcome-message">Bienvenido Alumno/a</h1>
-        </div>
-        <button id="cerrarSesion" class="logout-button">Cerrar Sesión</button>
+</head>
+
+<body>
+  <header class="bg-primary text-white p-3">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <span class="student-icon me-2"><i class="fas fa-user-graduate"></i></span>
+        <h1 class="h4" id="welcome-message">Bienvenido Alumno/a</h1>
       </div>
-    </header>
+      <button id="cerrarSesion" class="logout-button">Cerrar Sesión</button>
+    </div>
+  </header>
 
-    <nav class="container mt-3">
-      <ul class="nav justify-content-center" id="menu">
-        <li class="nav-item">
-          <a class="nav-link" href="#" onclick="showSection('propuestas')">
-            <i class="fas fa-book"></i> Ver Propuestas Académicas
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" onclick="showSection('disponibilidad')">
-            <i class="fas fa-check-circle"></i> Consulta Estado de Preinscripciones
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" onclick="showSection('preinscripcion')">
-            <i class="fas fa-edit"></i> Pre-Inscripción a Carreras
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" onclick="showSection('documentacion')">
-            <i class="fas fa-download"></i> Descarga de Documentación
-          </a>
-        </li>
-      </ul>
-    </nav>
-    
+  <nav class="container mt-3">
+    <ul class="nav justify-content-center" id="menu">
+      <li class="nav-item">
+        <a class="nav-link" href="#" onclick="showSection('propuestas')">
+          <i class="fas fa-book"></i> Ver Propuestas Académicas
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" onclick="showSection('disponibilidad')">
+          <i class="fas fa-check-circle"></i> Consulta Estado de Preinscripciones
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"
+          onclick="showSection('preinscripcion_espera')"><!-- Cambiar a 'preinscripcion' cuando sea necesario -->
+          <i class="fas fa-edit"></i> Pre-Inscripción a Carreras
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" onclick="showSection('documentacion')">
+          <i class="fas fa-download"></i> Descarga de Documentación
+        </a>
+      </li>
+    </ul>
+  </nav>
 
-    <main class="container mt-4">
-     <section id="portada">
-  <h2>Te damos la Bienvenida a nuestro portal de Preinscripción</h2>
-  <p style="text-align: justify">
-    <b>Estimados preinscriptos:</b><br /><br />
-    Dadas las limitaciones edilicias y de mobiliario de la institución, y
-    considerando que la capacidad máxima de un aula es de 90 alumnos, los
-    cupos de inscripción para el período lectivo 2026 se estructurarán de la
-    siguiente manera: <br /><br />
-    <b>Profesorados:</b> 80 alumnos.<br />
-    <b>Tecnicaturas:</b> 100 alumnos.<br /><br />
 
-    El cursado del <b>Taller de Ambientación, Nivelación y Orientación</b> será
-    de carácter obligatorio. Dicho taller dará inicio el <b>09 de febrero de
-    2026</b> y finalizará el <b>27 de febrero de 2026</b>, en el horario de 
-    <b>19:30 hs a 21:30 hs</b>.<br /><br />
+  <main class="container mt-4">
+    <section id="portada">
+      <h2>Te damos la Bienvenida a nuestro portal de Preinscripción</h2>
+      <p style="text-align: justify">
+        <b>Estimados preinscriptos:</b><br /><br />
+        Dadas las limitaciones edilicias y de mobiliario de la institución, y
+        considerando que la capacidad máxima de un aula es de 90 alumnos, los
+        cupos de inscripción para el período lectivo 2026 se estructurarán de la
+        siguiente manera: <br /><br />
+        <b>Profesorados:</b> 80 alumnos.<br />
+        <b>Tecnicaturas:</b> 100 alumnos.<br /><br />
 
-    El ingreso dependerá de la aprobación del taller según los siguientes
-    criterios mínimos:<br /><br />
-    <b>• 80% de asistencia</b><br />
-    <b>• 80% de trabajos prácticos aprobados</b><br />
-    <b>• Aprobación del Trabajo Práctico Integrador</b><br />
-  </p>
+        El cursado del <b>Taller de Ambientación, Nivelación y Orientación</b> será
+        de carácter obligatorio. Dicho taller dará inicio el <b>09 de febrero de
+          2026</b> y finalizará el <b>27 de febrero de 2026</b>, en el horario de
+        <b>19:30 hs a 21:30 hs</b>.<br /><br />
 
-  <div id="aviso-importante">
-    <h3>AVISO IMPORTANTE</h3>
+        El ingreso dependerá de la aprobación del taller según los siguientes
+        criterios mínimos:<br /><br />
+        <b>• 80% de asistencia</b><br />
+        <b>• 80% de trabajos prácticos aprobados</b><br />
+        <b>• Aprobación del Trabajo Práctico Integrador</b><br />
+      </p>
 
-    <div class="event">
-      <i class="fa fa-calendar-check"></i>
-      <strong>Inicio del Taller de Nivelación, Ambientación y Orientación:</strong>
-      09/02/2026
+      <div id="aviso-importante">
+        <h3>AVISO IMPORTANTE</h3>
+
+        <div class="event">
+          <i class="fa fa-calendar-check"></i>
+          <strong>Inicio del Taller de Nivelación, Ambientación y Orientación:</strong>
+          09/02/2026
+        </div>
+
+        <div class="event">
+          <i class="fa fa-calendar"></i>
+          <strong>Finalización del Taller:</strong>
+          27/02/2026 - Horario: 19:30 a 21:30 hs
+        </div>
+      </div>
+    </section>
+
+    <div class="sections2">
+      <section id="propuestas" style="display: none">
+        <h2>Propuestas Académicas</h2>
+        <p>Aquí puedes ver todas nuestras propuestas académicas.</p>
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered">
+            <thead>
+              <tr>
+                <th>ID Carrera</th>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Duración</th>
+              </tr>
+            </thead>
+            <tbody id="carrera-table-body"></tbody>
+          </table>
+        </div>
+      </section>
     </div>
 
-    <div class="event">
-      <i class="fa fa-calendar"></i>
-      <strong>Finalización del Taller:</strong>
-      27/02/2026 - Horario: 19:30 a 21:30 hs
+    <section id="disponibilidad" style="display: none">
+      <h2>Consultar tus Preinscripciones</h2>
+      <p>Aquí puedes consultar el estado de tus preinscripciones.</p>
+      <button class="btn btn-primary" id="consultarDisponibilidad">
+        Consultar
+      </button>
+      <button class="btn btn-danger" id="darDeBaja" style="display: none">
+        Dar de Baja
+      </button>
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered" id="tablaInscripciones" style="display: none; width: 100%">
+          <thead>
+            <tr>
+              <th>ID Inscripción</th>
+              <th>Alumno</th>
+              <th>DNI</th>
+              <th>Carrera</th>
+              <th>Fecha y Hora de Insc.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Las filas de datos se añadirán aquí dinámicamente -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="preinscripcion">
+      <h2>Preinscripciones a Carreras</h2>
+      <p>Formulario de Preinscripción</p>
+
+      <!-- Información sobre los cupos -->
+      <div class="alert alert-warning mt-4"
+        style="font-weight: bold; text-align: center; border: 2px solid #ff9800; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+        ⚠️ <strong>Importante:</strong> Las preinscripciones a las carreras están sujetas a un cupo máximo.
+        <br> Una vez superado los límites las preinscripciones virtuales quedarán <span
+          style="color: red;">Cerradas</span>.
+      </div>
+
+      <div class="card mt-4">
+        <div class="card-body">
+          <div class="mb-3">
+            <label for="carrera" class="form-label">Seleccionar Carrera:</label>
+            <select class="form-select" id="carrera" required>
+              <option value="" disabled selected>Seleccione una carrera</option>
+              <!-- Opciones de carrera aquí -->
+            </select>
+            <!-- Mostrar cupos disponibles -->
+            <div id="infoCupo" class="alert alert-info mt-3"
+              style="display:none; font-weight:bold; border-radius:10px;">
+            </div>
+
+          </div>
+
+          <!-- Campo oculto para idAlumno -->
+          <input type="hidden" id="idAlumno" value="<%= idAlumno %>" />
+
+          <div class="button-container">
+            <!-- Botón de Enviar Inscripción -->
+            <button type="button" class="btn btn-primary" id="enviarInscripcion">
+              Enviar Inscripción
+            </button>
+
+            <!-- Botón de Descargar Constancia (inicialmente oculto) -->
+            <button type="button" class="btn btn-secondary" id="descargarConstancia" style="display: none">
+              Descargar Constancia
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--SECCION TEMPORAL PARA PREINSCRIPCION A CARRERAS-->
+    <section id="preinscripcion_espera" style="display:none;">
+  <h2>Preinscripciones a Carreras</h2>
+
+  <!-- Mensaje principal -->
+  <div class="alert alert-info mt-4" 
+       style="font-weight:bold; text-align:center; font-size:1.2rem; 
+              border: 2px solid #0d6efd; border-radius:10px;">
+    📅 <strong>Las preinscripciones estarán disponibles el día
+      <span style="color:#0d6efd;">09/12/2025</span> a partir de las
+      <span style="color:#0d6efd;">21:00 hs</span>.
+    </strong>
+  </div>
+
+  <!-- NUEVO MENSAJE IMPORTANTE -->
+  <div class="alert alert-danger mt-3"
+       style="font-weight:bold; text-align:center; border-radius:10px; font-size:1.1rem;">
+    ⚠️ <strong>Importante:</strong><br>
+    Las preinscripciones realizadas <span style="color:rgb(10, 7, 219);">antes de la fecha y hora establecidas</span>
+    <span style="color:rgb(10, 7, 219);">no serán consideradas válidas</span> por el sistema.
+    <br>
+    Solo se validarán aquellas presentadas <span style="color:rgb(10, 7, 219);">posterior a la habilitación oficial</span>.
+  </div>
+
+  <!-- CONTADOR REGRESIVO -->
+  <div class="card mt-4" style="max-width:500px; margin:auto;">
+    <div class="card-body text-center">
+      <h4 style="font-weight:bold;">⏳ Tiempo restante</h4>
+      <div id="contador"
+           style="font-size:2rem; font-weight:bold; margin-top:15px; color:#dc3545;">
+        Cargando...
+      </div>
     </div>
   </div>
 </section>
 
-<div class="sections2">
-  <section id="propuestas" style="display: none">
-    <h2>Propuestas Académicas</h2>
-    <p>Aquí puedes ver todas nuestras propuestas académicas.</p>
-    <div class="table-responsive">
-      <table class="table table-striped table-bordered">
-        <thead>
-          <tr>
-            <th>ID Carrera</th>
-            <th>Nombre</th>
-            <th>Tipo</th>
-            <th>Duración</th>
-          </tr>
-        </thead>
-        <tbody id="carrera-table-body"></tbody>
-      </table>
-    </div>
-  </section>
-</div>
 
 
-        <section id="disponibilidad" style="display: none">
-          <h2>Consultar tus Preinscripciones</h2>
-          <p>Aquí puedes consultar el estado de tus preinscripciones.</p>
-          <button class="btn btn-primary" id="consultarDisponibilidad">
-            Consultar
-          </button>
-          <button class="btn btn-danger" id="darDeBaja" style="display: none">
-            Dar de Baja
-          </button>
-          <div class="table-responsive">
-            <table
-              class="table table-striped table-bordered"
-              id="tablaInscripciones"
-              style="display: none; width: 100%"
-            >
-              <thead>
-                <tr>
-                  <th>ID Inscripción</th>
-                  <th>Alumno</th>
-                  <th>DNI</th>
-                  <th>Carrera</th>
-                  <th>Fecha y Hora de Insc.</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Las filas de datos se añadirán aquí dinámicamente -->
-              </tbody>
-            </table>
-          </div>
-        </section>
 
-        <section id="preinscripcion">
-            <h2>Preinscripciones a Carreras</h2>
-            <p>Formulario de Preinscripción</p>
-          
-            <!-- Información sobre los cupos -->
-            <div class="alert alert-warning mt-4" style="font-weight: bold; text-align: center; border: 2px solid #ff9800; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
-              ⚠️ <strong>Importante:</strong> Las preinscripciones a las carreras están sujetas a un cupo máximo. 
-              <br> Una vez superado los límites las preinscripciones virtuales quedarán <span style="color: red;">Cerradas</span>.
-            </div>
-          
-            <div class="card mt-4">
-              <div class="card-body">
-                <div class="mb-3">
-                  <label for="carrera" class="form-label">Seleccionar Carrera:</label>
-                  <select class="form-select" id="carrera" required>
-                    <option value="" disabled selected>Seleccione una carrera</option>
-                    <!-- Opciones de carrera aquí -->
-                  </select>
-                  <!-- Mostrar cupos disponibles -->
-<div id="infoCupo" 
-     class="alert alert-info mt-3" 
-     style="display:none; font-weight:bold; border-radius:10px;">
-</div>
-
-                </div>
-          
-                <!-- Campo oculto para idAlumno -->
-                <input type="hidden" id="idAlumno" value="<%= idAlumno %>" />
-          
-                <div class="button-container">
-                  <!-- Botón de Enviar Inscripción -->
-                  <button type="button" class="btn btn-primary" id="enviarInscripcion">
-                    Enviar Inscripción
-                  </button>
-          
-                  <!-- Botón de Descargar Constancia (inicialmente oculto) -->
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    id="descargarConstancia"
-                    style="display: none"
-                  >
-                    Descargar Constancia
-                  </button>
-                </div>
-              </div>
-            </div>
-          </section>
-
-        <section id="documentacion">
-          <h2>Descarga Documentación</h2>
-          <p>
-            Descarga las cartillas para el taller de Nivelación y Ambientación
-          </p>
-
-          <!-- Botón para descargar el archivo -->
-          <div class="container my-4">
-            <div class="button-container">
-              <div class="button-wrapper">
-                <a href="/material/Acuerdo de Convivencia IES_6021_ 2026.pdf" download="Acuerdo de Convivenvia.pdf" class="btn btn-primary btn-equal">
-                  <i class="fas fa-file-download"></i> Acuerdo de Convivenvia
-                </a>
-              </div>
-              <div class="button-wrapper">
-                <a href="/material/Cartilla ingreso PESI 2025.pdf" download="Cartilla PESI 2025" class="btn btn-primary btn-equal">
-                  <i class="fas fa-laptop-code"></i> Informática
-                </a>
-              </div>
-              <div class="button-wrapper">
-                <a href="/material/Cartilla ingreso PESH 2025.pdf" download="Cartilla Prof Historia 2025" class="btn btn-primary btn-equal">
-                  <i class="fas fa-book"></i> Historia
-                </a>
-              </div>
-              <div class="button-wrapper">
-                <a href="/material/Cartilla_ingreso_PESG_2025.pdf" download="Cartilla Prof Geografía 2025" class="btn btn-primary btn-equal">
-                  <i class="fas fa-map"></i> Geografía
-                </a>
-              </div>
-              <div class="button-wrapper">
-                <a href="/material/Cartilla_ingreso_TSGE_2025.pdf" download="Cartilla Tec Emprendimiento 2025" class="btn btn-primary btn-equal">
-                  <i class="fas fa-chart-line"></i> Emprendimiento
-                </a>
-              </div>
-              <div class="button-wrapper">
-                <a href="/material/Cartilla_ingreso_TSL_2025.pdf" download="Cartilla Tec Laboratorio 2025" class="btn btn-primary btn-equal">
-                  <i class="fas fa-flask"></i> Laboratorio
-                </a>
-              </div>
-              <div class="button-wrapper">
-                <a href="/material/Plan de Estudio - Tec. Supr en Minería.pdf" download="Plan Estudio Tec Minería 2025" class="btn btn-primary btn-equal">
-                  <i class="fas fa-mountain"></i> Plan de Estudio Minería
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-    </main>
-
-    <footer class="text-center p-3 mt-4">
+    <section id="documentacion">
+      <h2>Descarga Documentación</h2>
       <p>
-        &copy; 2025 Instituto de Educación Superior N° 6021 Juan Carlos Dávalos.
-        Todos los derechos reservados - created by diegoeduardo66@gmail.com
+        Descarga las cartillas para el taller de Nivelación y Ambientación
       </p>
-    </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-      // Mostrar el nombre completo del alumno si existe
-      const nombreCompleto = sessionStorage.getItem("nombreCompleto");
-      if (nombreCompleto) {
-        document.getElementById(
-          "welcome-message"
-        ).textContent = `Bienvenido Alumno/a: ${nombreCompleto}`;
-      }
+      <!-- Botón para descargar el archivo -->
+      <div class="container my-4">
+        <div class="button-container">
+          <div class="button-wrapper">
+            <a href="/material/Acuerdo de Convivencia IES_6021_ 2026.pdf" download="Acuerdo de Convivenvia.pdf"
+              class="btn btn-primary btn-equal">
+              <i class="fas fa-file-download"></i> Acuerdo de Convivenvia
+            </a>
+          </div>
+          <div class="button-wrapper">
+            <a href="/material/Cartilla ingreso PESI 2025.pdf" download="Cartilla PESI 2025"
+              class="btn btn-primary btn-equal">
+              <i class="fas fa-laptop-code"></i> Informática
+            </a>
+          </div>
+          <div class="button-wrapper">
+            <a href="/material/Cartilla ingreso PESH 2025.pdf" download="Cartilla Prof Historia 2025"
+              class="btn btn-primary btn-equal">
+              <i class="fas fa-book"></i> Historia
+            </a>
+          </div>
+          <div class="button-wrapper">
+            <a href="/material/Cartilla_ingreso_PESG_2025.pdf" download="Cartilla Prof Geografía 2025"
+              class="btn btn-primary btn-equal">
+              <i class="fas fa-map"></i> Geografía
+            </a>
+          </div>
+          <div class="button-wrapper">
+            <a href="/material/Cartilla_ingreso_TSGE_2025.pdf" download="Cartilla Tec Emprendimiento 2025"
+              class="btn btn-primary btn-equal">
+              <i class="fas fa-chart-line"></i> Emprendimiento
+            </a>
+          </div>
+          <div class="button-wrapper">
+            <a href="/material/Cartilla_ingreso_TSL_2025.pdf" download="Cartilla Tec Laboratorio 2025"
+              class="btn btn-primary btn-equal">
+              <i class="fas fa-flask"></i> Laboratorio
+            </a>
+          </div>
+          <div class="button-wrapper">
+            <a href="/material/Plan de Estudio - Tec. Supr en Minería.pdf" download="Plan Estudio Tec Minería 2025"
+              class="btn btn-primary btn-equal">
+              <i class="fas fa-mountain"></i> Plan de Estudio Minería
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+    </div>
+  </main>
 
-      // Cerrar sesión
-      document.getElementById("cerrarSesion").addEventListener("click", () => {
-        sessionStorage.removeItem("nombreCompleto");
-        window.location.href = "/index.html";
-      });
+  <footer class="text-center p-3 mt-4">
+    <p>
+      &copy; 2025 Instituto de Educación Superior N° 6021 Juan Carlos Dávalos.
+      Todos los derechos reservados - created by diegoeduardo66@gmail.com
+    </p>
+  </footer>
 
-      // Mostrar solo la sección correspondiente y ocultar las demás
-      function showSection(sectionId) {
-        const sections = [
-          "portada",
-          "propuestas",
-          "disponibilidad",
-          "preinscripcion",
-          "documentacion",
-        ];
-        sections.forEach(
-          (id) => (document.getElementById(id).style.display = "none")
-        );
-        document.getElementById(sectionId).style.display = "block";
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Mostrar el nombre completo del alumno si existe
+    const nombreCompleto = sessionStorage.getItem("nombreCompleto");
+    if (nombreCompleto) {
+      document.getElementById(
+        "welcome-message"
+      ).textContent = `Bienvenido Alumno/a: ${nombreCompleto}`;
+    }
 
-        if (sectionId === "propuestas") loadCarreras(); // Cargar propuestas
-        if (sectionId === "preinscripcion") loadCarrera(); // Cargar preinscripción
-      }
+    // Cerrar sesión
+    document.getElementById("cerrarSesion").addEventListener("click", () => {
+      sessionStorage.removeItem("nombreCompleto");
+      window.location.href = "/index.html";
+    });
 
-      // Cargar las carreras en la tabla
-      async function loadCarreras() {
-        try {
-          const response = await fetch("/carreras");
-          const carreras = await response.json();
-          const tableBody = document.getElementById("carrera-table-body");
-          tableBody.innerHTML = "";
+    // Mostrar solo la sección correspondiente y ocultar las demás
+    function showSection(sectionId) {
+      const sections = [
+        "portada",
+        "propuestas",
+        "disponibilidad",
+        "preinscripcion",
+        "documentacion",
+      ];
+      sections.forEach(
+        (id) => (document.getElementById(id).style.display = "none")
+      );
+      document.getElementById(sectionId).style.display = "block";
 
-          carreras.forEach((carrera) => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
+      if (sectionId === "propuestas") loadCarreras(); // Cargar propuestas
+      if (sectionId === "preinscripcion") loadCarrera(); // Cargar preinscripción
+    }
+
+    // Cargar las carreras en la tabla
+    async function loadCarreras() {
+      try {
+        const response = await fetch("/carreras");
+        const carreras = await response.json();
+        const tableBody = document.getElementById("carrera-table-body");
+        tableBody.innerHTML = "";
+
+        carreras.forEach((carrera) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
                 <td>${carrera.idcarrera}</td>
                 <td>${carrera.nombre}</td>
                 <td>${carrera.tipo}</td>
                 <td>${carrera.duracion}</td>
             `;
-            tableBody.appendChild(row);
-          });
-        } catch (error) {
-          console.error("Error al cargar las carreras:", error);
-        }
+          tableBody.appendChild(row);
+        });
+      } catch (error) {
+        console.error("Error al cargar las carreras:", error);
       }
+    }
 
-      // Cargar las carreras en el selector
-      async function loadCarrera() {
+    // Cargar las carreras en el selector
+    async function loadCarrera() {
+      try {
+        const response = await fetch("/carreras");
+        const carreras = await response.json();
+        const carreraSelect = document.getElementById("carrera");
+        carreraSelect.innerHTML =
+          '<option value="" disabled selected>Seleccione una carrera</option>';
+
+        carreras.forEach((carrera) => {
+          const option = document.createElement("option");
+          option.value = carrera.idcarrera;
+          option.textContent = carrera.nombre;
+          carreraSelect.appendChild(option);
+        });
+      } catch (error) {
+        console.error("Error al cargar las carreras:", error);
+      }
+    }
+
+    document
+      .getElementById("consultarDisponibilidad")
+      .addEventListener("click", async () => {
         try {
-          const response = await fetch("/carreras");
-          const carreras = await response.json();
-          const carreraSelect = document.getElementById("carrera");
-          carreraSelect.innerHTML =
-            '<option value="" disabled selected>Seleccione una carrera</option>';
+          const response = await fetch("/inscripciones");
+          const data = await response.json();
 
-          carreras.forEach((carrera) => {
-            const option = document.createElement("option");
-            option.value = carrera.idcarrera;
-            option.textContent = carrera.nombre;
-            carreraSelect.appendChild(option);
-          });
-        } catch (error) {
-          console.error("Error al cargar las carreras:", error);
-        }
-      }
-
-      document
-        .getElementById("consultarDisponibilidad")
-        .addEventListener("click", async () => {
-          try {
-            const response = await fetch("/inscripciones");
-            const data = await response.json();
-
-            if (data.success && data.inscripciones.length > 0) {
-              const tbody = document.querySelector("#tablaInscripciones tbody");
-              tbody.innerHTML = "";
-              data.inscripciones.forEach((inscripcion) => {
-                const row = `<tr>
+          if (data.success && data.inscripciones.length > 0) {
+            const tbody = document.querySelector("#tablaInscripciones tbody");
+            tbody.innerHTML = "";
+            data.inscripciones.forEach((inscripcion) => {
+              const row = `<tr>
                     <td>${inscripcion.idinscripcion}</td>
                     <td>${inscripcion.Alumno}</td>
                     <td>${inscripcion.dni}</td>
                     <td>${inscripcion.Carrera}</td>
                     <td>${inscripcion.fecha}</td>
                 </tr>`;
-                tbody.innerHTML += row;
-              });
-              document.getElementById("tablaInscripciones").style.display =
-                "table";
-              document.getElementById("darDeBaja").style.display =
-                "inline-block";
-              document.getElementById("descargarConstancia").style.display =
-                "inline-block";
-              document.getElementById("descargarMaterial").style.display =
-                "inline-block";
-            } else {
-              document.getElementById("darDeBaja").style.display = "none";
-            }
-          } catch (error) {
-            console.error("Error al consultar inscripciones:", error);
-          }
-        });
-
-      document
-        .getElementById("darDeBaja")
-        .addEventListener("click", async () => {
-          const idInscripcion = document.querySelector(
-            "#tablaInscripciones tbody tr td:first-child"
-          ).innerText;
-
-          if (confirm("¿Desea darse de baja de la inscripción?")) {
-            try {
-              const response = await fetch(
-                `/inscripciones/baja/${idInscripcion}`,
-                {
-                  method: "PUT",
-                  headers: { "Content-Type": "application/json" },
-                }
-              );
-              const result = await response.json();
-
-              if (result.success) {
-                alert("La inscripción ha sido dada de baja.");
-                window.location.reload();
-              } else {
-                alert("Error al dar de baja la inscripción.");
-              }
-            } catch (error) {
-              console.error("Error al dar de baja la inscripción:", error);
-              alert("Hubo un problema al intentar dar de baja la inscripción.");
-            }
-          }
-        });
-
-      // Procesar la inscripción y habilitar el botón de descarga
-      document
-        .getElementById("enviarInscripcion")
-        .addEventListener("click", async () => {
-          const idCarrera = document.getElementById("carrera").value;
-
-          if (!idCarrera) {
-            alert("Seleccione una carrera");
-            return;
-          }
-
-          try {
-            const response = await fetch("/inscripciones/nueva", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ idCarrera }),
+              tbody.innerHTML += row;
             });
+            document.getElementById("tablaInscripciones").style.display =
+              "table";
+            document.getElementById("darDeBaja").style.display =
+              "inline-block";
+            document.getElementById("descargarConstancia").style.display =
+              "inline-block";
+            document.getElementById("descargarMaterial").style.display =
+              "inline-block";
+          } else {
+            document.getElementById("darDeBaja").style.display = "none";
+          }
+        } catch (error) {
+          console.error("Error al consultar inscripciones:", error);
+        }
+      });
 
+    document
+      .getElementById("darDeBaja")
+      .addEventListener("click", async () => {
+        const idInscripcion = document.querySelector(
+          "#tablaInscripciones tbody tr td:first-child"
+        ).innerText;
+
+        if (confirm("¿Desea darse de baja de la inscripción?")) {
+          try {
+            const response = await fetch(
+              `/inscripciones/baja/${idInscripcion}`,
+              {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+              }
+            );
             const result = await response.json();
 
             if (result.success) {
-              alert("Inscripción realizada exitosamente.");
-              document.getElementById("enviarInscripcion").disabled = true;
-              const descargarBtn = document.getElementById(
-                "descargarConstancia"
-              );
-              descargarBtn.style.display = "inline-block"; // Muestra el botón
-              descargarBtn.onclick = () =>
-                window.open(result.downloadUrl, "_blank"); // Asigna enlace de descarga
+              alert("La inscripción ha sido dada de baja.");
+              window.location.reload();
             } else {
-              alert("Error al realizar la inscripción: " + result.message);
+              alert("Error al dar de baja la inscripción.");
             }
           } catch (error) {
-            console.error("Error en el proceso de inscripción:", error);
+            console.error("Error al dar de baja la inscripción:", error);
+            alert("Hubo un problema al intentar dar de baja la inscripción.");
           }
-        });
-
-      // Cargar datos del alumno
-      document.addEventListener("DOMContentLoaded", () => {
-        fetch("/datos-alumno")
-          .then((response) => response.json())
-          .then((data) => {
-            document.getElementById("apellidos").textContent = data.apellidos;
-            document.getElementById("nombres").textContent = data.nombres;
-            document.getElementById("cuil").textContent = data.cuil;
-            document.getElementById("dni").textContent = data.dni;
-            document.getElementById("localidad").textContent = data.localidad;
-            document.getElementById("telefono").textContent = data.telefono;
-          })
-          .catch((error) =>
-            console.error("Error al cargar los datos del alumno:", error)
-          );
+        }
       });
 
-      // Ocultar todas las secciones excepto la portada al cargar la página
-      window.onload = () => {
-        showSection("portada");
-      };
-    </script>
-    <script>
-// Mostrar cupo al cambiar carrera
-document.getElementById("carrera").addEventListener("change", async () => {
-    const idCarrera = document.getElementById("carrera").value;
-    const infoDiv = document.getElementById("infoCupo");
+    // Procesar la inscripción y habilitar el botón de descarga
+    document
+      .getElementById("enviarInscripcion")
+      .addEventListener("click", async () => {
+        const idCarrera = document.getElementById("carrera").value;
 
-    if (!idCarrera) {
+        if (!idCarrera) {
+          alert("Seleccione una carrera");
+          return;
+        }
+
+        try {
+          const response = await fetch("/inscripciones/nueva", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ idCarrera }),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            alert("Inscripción realizada exitosamente.");
+            document.getElementById("enviarInscripcion").disabled = true;
+            const descargarBtn = document.getElementById(
+              "descargarConstancia"
+            );
+            descargarBtn.style.display = "inline-block"; // Muestra el botón
+            descargarBtn.onclick = () =>
+              window.open(result.downloadUrl, "_blank"); // Asigna enlace de descarga
+          } else {
+            alert("Error al realizar la inscripción: " + result.message);
+          }
+        } catch (error) {
+          console.error("Error en el proceso de inscripción:", error);
+        }
+      });
+
+    // Cargar datos del alumno
+    document.addEventListener("DOMContentLoaded", () => {
+      fetch("/datos-alumno")
+        .then((response) => response.json())
+        .then((data) => {
+          document.getElementById("apellidos").textContent = data.apellidos;
+          document.getElementById("nombres").textContent = data.nombres;
+          document.getElementById("cuil").textContent = data.cuil;
+          document.getElementById("dni").textContent = data.dni;
+          document.getElementById("localidad").textContent = data.localidad;
+          document.getElementById("telefono").textContent = data.telefono;
+        })
+        .catch((error) =>
+          console.error("Error al cargar los datos del alumno:", error)
+        );
+    });
+
+    // Ocultar todas las secciones excepto la portada al cargar la página
+    window.onload = () => {
+      showSection("portada");
+    };
+  </script>
+  <script>
+    // Mostrar cupo al cambiar carrera
+    document.getElementById("carrera").addEventListener("change", async () => {
+      const idCarrera = document.getElementById("carrera").value;
+      const infoDiv = document.getElementById("infoCupo");
+
+      if (!idCarrera) {
         infoDiv.style.display = "none";
         return;
-    }
+      }
 
-    try {
+      try {
         const response = await fetch(`/carreras/cupos/${idCarrera}`);
         const data = await response.json();
 
         if (!data.success) {
-            infoDiv.style.display = "none";
-            return;
+          infoDiv.style.display = "none";
+          return;
         }
 
         const { nombre, tipo, cupoMaximo, inscriptos, restantes } = data;
@@ -489,23 +517,23 @@ document.getElementById("carrera").addEventListener("change", async () => {
 
         // Colores dinámicos según disponibilidad
         if (restantes <= 0) {
-            infoDiv.className = "alert alert-danger mt-3";
-            infoDiv.innerHTML = `
+          infoDiv.className = "alert alert-danger mt-3";
+          infoDiv.innerHTML = `
                 <strong>${nombre}</strong><br>
                 ⛔ Cupo COMPLETO.  
                 <br>Si te inscribís quedarás como <span style="color:red;">Suplente</span>.
             `;
-        } 
+        }
         else if (restantes <= 10) {
-            infoDiv.className = "alert alert-warning mt-3";
-            infoDiv.innerHTML = `
+          infoDiv.className = "alert alert-warning mt-3";
+          infoDiv.innerHTML = `
                 <strong>${nombre}</strong><br>
                 ⚠️ Últimos <strong>${restantes}</strong> cupos disponibles.
             `;
-        } 
+        }
         else {
-            infoDiv.className = "alert alert-info mt-3";
-            infoDiv.innerHTML = `
+          infoDiv.className = "alert alert-info mt-3";
+          infoDiv.innerHTML = `
                 <strong>${nombre}</strong><br>
                 Cupo máximo: <strong>${cupoMaximo}</strong><br>
                 Inscriptos: <strong>${inscriptos}</strong><br>
@@ -513,12 +541,44 @@ document.getElementById("carrera").addEventListener("change", async () => {
             `;
         }
 
-    } catch (error) {
+      } catch (error) {
         console.error("Error al obtener cupos:", error);
+      }
+    });
+  </script>
+
+  <script>
+    // FECHA DE APERTURA: 9 diciembre 2025 21:00 (Argentina -03)
+    const fechaApertura = new Date("2025-12-09T21:00:00-03:00").getTime();
+
+    function actualizarContador() {
+      const ahora = new Date().getTime();
+      const distancia = fechaApertura - ahora;
+
+      if (distancia <= 0) {
+        // Cuando llega la fecha → ocultar aviso y mostrar formulario real
+        document.getElementById("preinscripcion_espera").style.display = "none";
+        document.getElementById("preinscripcion").style.display = "block";
+        return;
+      }
+
+      // Cálculos de tiempo
+      const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
+      const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+      const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
+
+      document.getElementById("contador").innerHTML =
+        `${dias}d ${horas}h ${minutos}m ${segundos}s`;
     }
-});
-</script>
+
+    // Actualizar cada segundo
+    setInterval(actualizarContador, 1000);
+    actualizarContador();
+  </script>
 
 
-  </body>
+
+</body>
+
 </html>
