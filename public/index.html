@@ -3,234 +3,270 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Instituto de Educación Superior N° 6.021</title>
+    <title>IES N° 6.021 – Cupos disponibles</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" href="./esc.ico">
 
     <style>
-    /* ----------- ESTILOS GENERALES ----------- */
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: "Segoe UI", Arial, sans-serif;
-        background: #f3f4f7;
-        color: #333;
-    }
+        /* ---------- ESTILOS GENERALES ---------- */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f3f4f7;
+            color: #333;
+        }
 
-    /* ----------- ENCABEZADO ----------- */
-    header {
-        background: linear-gradient(135deg, #0d47a1, #1976d2);
-        padding: 30px 20px;
-        text-align: center;
-        color: white;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    }
+        /* ---------- HEADER ---------- */
+        header {
+            background: linear-gradient(135deg, #0d47a1, #1976d2);
+            padding: 35px 20px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.35);
+        }
 
-    header h1 {
-        margin: 0;
-        font-size: 32px;
-        font-weight: 600;
-    }
+        header h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
 
-    /* ----------- CONTENEDOR PRINCIPAL ----------- */
-    .container {
-        max-width: 900px;
-        margin: 40px auto;
-        background: white;
-        padding: 30px;
-        border-radius: 18px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    }
+        /* ---------- CONTENEDOR ---------- */
+        .container {
+            max-width: 950px;
+            margin: 40px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        }
 
-    /* ----------- TITULOS ----------- */
-    .section-title {
-        font-size: 24px;
-        font-weight: 700;
-        color: #0d47a1;
-        margin-bottom: 15px;
-        text-align: center;
-    }
+        /* ---------- TÍTULO ---------- */
+        .section-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #0d47a1;
+            margin-bottom: 10px;
+            text-align: center;
+        }
 
-    /* ----------- INFORMACIÓN ----------- */
-    .info-block {
-        margin-bottom: 25px;
-        padding: 18px;
-        background: #f8f9fc;
-        border-left: 5px solid #1976d2;
-        border-radius: 10px;
-        font-size: 17px;
-        line-height: 1.6;
-    }
+        .section-subtitle {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 30px;
+            color: #555;
+        }
 
-    .info-block i {
-        color: #0d47a1;
-        margin-right: 8px;
-    }
+        /* ---------- BLOQUE CUPOS ---------- */
+        .cupo-card {
+            background: #f8f9fc;
+            border-left: 6px solid #1976d2;
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease;
+        }
 
-    .obligatorio {
-        font-weight: 900;
-        color: #d32f2f;
-        background: rgba(255, 0, 0, 0.15);
-        padding: 4px 8px;
-        border-radius: 6px;
-    }
+        .cupo-card:hover {
+            transform: translateY(-3px);
+        }
 
-    /* ----------- BOTONES ----------- */
-    .button-container {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        align-items: center;
-        width: 100%;
-        margin-top: 35px;
-    }
+        .cupo-card h3 {
+            margin: 0;
+            font-size: 19px;
+            font-weight: 800;
+        }
 
-    .button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
+        .cupo-card small {
+            color: #555;
+            font-weight: 600;
+        }
 
-        background: #1976d2;
-        color: white;
-        text-decoration: none;
+        .cupo-info {
+            margin-top: 12px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
 
-        padding: 12px 20px;
-        font-size: 17px;
-        font-weight: 600;
+        .estado {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 5px 12px;
+            border-radius: 18px;
+            font-size: 14px;
+            font-weight: 800;
+        }
 
-        border-radius: 28px;
-        transition: 0.3s;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        .estado-ok {
+            background: #e3f2fd;
+            color: #0d47a1;
+        }
 
-        width: 100%;
-        max-width: 280px;
-    }
+        .estado-warning {
+            background: #fff8e1;
+            color: #f57f17;
+        }
 
-    .button:hover {
-        background: #0d47a1;
-        transform: translateY(-3px);
-    }
+        .estado-danger {
+            background: #fdecea;
+            color: #c62828;
+        }
 
-    /* ----------- FOOTER ----------- */
-    footer {
-        margin-top: 40px;
-        text-align: center;
-        font-size: 14px;
-        color: #666;
-        padding-bottom: 20px;
-    }
-
-    /* ----------- RESPONSIVE ----------- */
-    @media (max-width: 600px) {
-        header h1 { font-size: 24px; }
-        .container { padding: 20px; }
-        .section-title { font-size: 20px; }
+        /* ---------- BOTONES ---------- */
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            margin-top: 40px;
+        }
 
         .button {
-            max-width: 100%;
-            font-size: 16px;
-            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #1976d2;
+            color: white;
+            text-decoration: none;
+            padding: 14px 22px;
+            font-size: 17px;
+            font-weight: 700;
+            border-radius: 30px;
+            transition: 0.3s;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+            width: 100%;
+            max-width: 300px;
         }
-    }
-    </style>
 
+        .button:hover {
+            background: #0d47a1;
+            transform: translateY(-3px);
+        }
+
+        /* ---------- FOOTER ---------- */
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            padding-bottom: 25px;
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                padding: 22px;
+            }
+
+            .section-title {
+                font-size: 22px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <header>
-        <h1>Instituto de Educación Superior N° 6.021<br> Juan Carlos Dávalos</h1>
-    </header>
+<header>
+    <h1>
+        Instituto de Educación Superior N° 6.021<br>
+        Juan Carlos Dávalos
+    </h1>
+</header>
 
-    <div class="container">
+<div class="container">
 
-        <h2 class="section-title"><i class="fas fa-info-circle"></i> Información Importante 2026</h2>
+    <h2 class="section-title">
+        <i class="fas fa-chart-bar"></i> Cupos disponibles por carrera
+    </h2>
 
-        <!-- NUEVO MENSAJE SOBRE LAS PREINSCRIPCIONES -->
-        <div class="info-block" style="border-left: 5px solid #d32f2f;">
-            <span style="display:inline-flex; align-items:center; 
-                        background:#d32f2f; color:#fff;
-                        padding:6px 14px; border-radius:6px; 
-                        font-weight:800; font-size:16px; margin-bottom:10px;">
-                <i class="fas fa-ban" style="margin-right:6px;"></i> AVISO IMPORTANTE
-            </span>
+    <p class="section-subtitle">
+        Información actualizada de disponibilidad para la preinscripción
+        correspondiente al período lectivo 2026.
+    </p>
 
-            <br>
+    <!-- CUPOS -->
+    <div id="contenedorCupos"></div>
 
-            📅 Las preinscripciones a las carreras estarán habilitadas el día  
-            <strong style="color:#0d47a1;">09/12/2025</strong> a partir de las  
-            <strong style="color:#0d47a1;">21:00 hs</strong>.
+    <!-- BOTONES -->
+    <div class="button-container">
+        <a href="login.html" class="button">
+            <i class="fas fa-user"></i> Iniciar sesión
+        </a>
 
-            <br><br>
-
-            ⚠️ <strong>Importante:</strong>  
-            Todas las preinscripciones realizadas 
-            <span class="obligatorio">antes de la fecha y hora indicadas</span>  
-            <span style="color:#d32f2f; font-weight:700;">no serán consideradas válidas</span> por el sistema.
-            <br>
-            Solo se validarán aquellas cargadas 
-            <span style="font-weight:700;">posteriormente a la habilitación oficial</span>.
-        </div>
-
-        <!-- BLOQUE ORIGINAL DE INFORMACIÓN -->
-        <div class="info-block">
-            <i class="fas fa-exclamation-circle"></i>
-            Debido a las actuales condiciones edilicias que posee la institución, los cupos para el ciclo lectivo 2026
-            estarán <span class="obligatorio">sujetos a disponibilidad</span>.
-            <br><br>
-
-            <span style="display:inline-flex; align-items:center; background:#fdd835; color:#000; 
-                        padding:6px 14px; border-radius:6px; font-weight:800; font-size:16px;">
-                <i class="fas fa-exclamation-triangle" style="margin-right:6px;"></i> IMPORTANTE
-            </span>
-            <br><br>
-
-            El Taller de Ambientación, Nivelación y Orientación es 
-            <span class="obligatorio">OBLIGATORIO</span> para todos los postulantes.
-        </div>
-
-        <div class="info-block">
-            <i class="fas fa-calendar-alt"></i>
-            <strong>Inicio:</strong> 09 de febrero de 2026.<br>
-            <i class="fas fa-calendar-check"></i>
-            <strong>Finalización:</strong> 27 de febrero de 2026.<br>
-            <i class="fas fa-clock"></i>
-            <strong>Horario:</strong> 19:30 a 21:30 hs.
-        </div>
-
-        <div class="info-block">
-            <i class="fas fa-users"></i>
-            <strong>Cupos de matrícula:</strong><br>
-            • Profesorados: 80 alumnos.<br>
-            • Tecnicaturas: 100 alumnos.
-        </div>
-
-        <div class="info-block">
-            <i class="fas fa-check-circle"></i>
-            <strong>Criterios para aprobar el taller:</strong><br>
-            • 80% de asistencia.<br>
-            • 80% de trabajos prácticos aprobados.<br>
-            • Trabajo Práctico Integrador aprobado.
-        </div>
-
-        <!-- BOTONES CENTRADOS -->
-        <div class="button-container">
-            <a href="login.html" class="button">  
-                <i class="fas fa-user"></i> Iniciar Sesión
-            </a>
-
-            <a href="registro.html" class="button">
-                <i class="fas fa-pencil-alt"></i> Registrarse
-            </a>
-        </div>
+        <a href="registro.html" class="button">
+            <i class="fas fa-pencil-alt"></i> Registrarse
+        </a>
     </div>
 
-    <footer>
-        &copy; 2025 Instituto de Educación Superior N° 6.021. Todos los derechos reservados.  
-        <br>Creado por: diegoeduardo66@gmail.com
-    </footer>
+</div>
+
+<footer>
+    &copy; 2025 Instituto de Educación Superior N° 6.021. Todos los derechos reservados.<br>
+    Creado por: diegoeduardo66@gmail.com
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+    const contenedor = document.getElementById("contenedorCupos");
+
+    try {
+        const response = await fetch("/carreras/cupos");
+        const data = await response.json();
+
+        if (!data.success) {
+            contenedor.innerHTML = "<p>No se pudo cargar la información.</p>";
+            return;
+        }
+
+        contenedor.innerHTML = "";
+
+        data.carreras.forEach(carrera => {
+            let color = "#1976d2";
+            let estadoClass = "estado-ok";
+            let estadoTexto = "Cupos disponibles";
+
+            if (carrera.disponibles <= 0) {
+                color = "#c62828";
+                estadoClass = "estado-danger";
+                estadoTexto = "Cupo completo (Suplente)";
+            } else if (carrera.disponibles <= 10) {
+                color = "#f57f17";
+                estadoClass = "estado-warning";
+                estadoTexto = "Últimos cupos disponibles";
+            }
+
+            contenedor.innerHTML += `
+                <div class="cupo-card" style="border-left-color:${color}">
+                    <h3>${carrera.nombre}</h3>
+                    <small>${carrera.tipo}</small>
+                    <div class="cupo-info">
+                        Cupo máximo: <strong>${carrera.cupoMaximo}</strong><br>
+                        Inscriptos: <strong>${carrera.inscriptos}</strong><br>
+                        Disponibles: <strong>${carrera.disponibles}</strong><br>
+                        <span class="estado ${estadoClass}">
+                            ${estadoTexto}
+                        </span>
+                    </div>
+                </div>
+            `;
+        });
+
+    } catch (error) {
+        console.error("Error:", error);
+        contenedor.innerHTML = "<p>Error al cargar los cupos.</p>";
+    }
+});
+</script>
 
 </body>
 </html>
