@@ -53,8 +53,16 @@
 
         .icon {
             font-size: 50px;
-            color: #ffd700;
+            color: #ffcc00;
             margin-bottom: 20px;
+        }
+
+        .alert {
+            background: rgba(0, 0, 0, 0.25);
+            border-left: 5px solid #ffcc00;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 25px;
         }
 
         footer {
@@ -71,17 +79,25 @@
 </head>
 <body>
     <div class="container">
-        <i class="fa-solid fa-graduation-cap icon"></i>
+        <i class="fa-solid fa-circle-xmark icon"></i>
+
         <h1>Instituto de Educación Superior N° 6.021</h1>
         <h2>“Juan Carlos Dávalos”</h2>
 
-        <p><strong>Estimados postulantes,</strong></p>
-        <p>La Rectoría del Instituto Superior N° 6.021 <strong>“Juan Carlos Dávalos”</strong> agradece profundamente su interés por formar parte de esta prestigiosa institución educativa.</p>
-        <p>Les informamos que las <strong>preinscripciones para el período lectivo 2026</strong> aún <strong>no se encuentran abiertas.</strong></p>
-        <p>Próximamente estará disponible la plataforma oficial para realizar su preinscripción. Les invitamos a mantenerse atentos a nuestras comunicaciones oficiales.</p>
-        
-        <i class="fa-solid fa-clock icon" style="font-size:40px; color:#87cefa;"></i>
-        <p><em>Gracias por su paciencia y comprensión.</em></p>
+        <div class="alert">
+            <p><strong>Estimados postulantes:</strong></p>
+            <p>
+                Se informa a la comunidad que el <strong>período de preinscripción correspondiente
+                al ciclo lectivo 2026 ha finalizado</strong>.
+            </p>
+            <p>
+                Agradecemos el interés demostrado en formar parte de nuestra institución
+                y los invitamos a mantenerse atentos a futuras comunicaciones oficiales.
+            </p>
+        </div>
+
+        <i class="fa-solid fa-bullhorn icon" style="font-size:40px; color:#87cefa;"></i>
+        <p><em>La información oficial será publicada por los canales institucionales.</em></p>
     </div>
 
     <footer>
