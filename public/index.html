@@ -9,7 +9,6 @@
     <link rel="icon" href="./esc.ico">
 
     <style>
-        /* ---------- ESTILOS GENERALES ---------- */
         body {
             margin: 0;
             padding: 0;
@@ -18,7 +17,6 @@
             color: #333;
         }
 
-        /* ---------- HEADER ---------- */
         header {
             background: linear-gradient(135deg, #0d47a1, #1976d2);
             padding: 30px 20px;
@@ -40,10 +38,8 @@
             margin: 0;
             font-size: 30px;
             font-weight: 700;
-            line-height: 1.3;
         }
 
-        /* ---------- BOTONES HEADER ---------- */
         .header-buttons {
             display: flex;
             gap: 12px;
@@ -62,16 +58,14 @@
             background: rgba(255,255,255,0.18);
             border: 1px solid rgba(255,255,255,0.35);
             transition: 0.3s;
-            backdrop-filter: blur(6px);
         }
 
         .header-button:hover {
             background: white;
-            color: #37e462;
+            color: #0d47a1;
             transform: translateY(-2px);
         }
 
-        /* ---------- CONTENEDOR ---------- */
         .container {
             max-width: 950px;
             margin: 40px auto;
@@ -81,7 +75,29 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.12);
         }
 
-        /* ---------- TÍTULOS ---------- */
+        /* MENSAJE INSTITUCIONAL */
+        .mensaje-institucional {
+            background: #e3f2fd;
+            border-left: 6px solid #0d47a1;
+            padding: 22px 25px;
+            border-radius: 14px;
+            margin-bottom: 35px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+        }
+
+        .mensaje-institucional h2 {
+            margin-top: 0;
+            font-size: 22px;
+            color: #0d47a1;
+            font-weight: 800;
+        }
+
+        .mensaje-institucional p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
         .section-title {
             font-size: 26px;
             font-weight: 800;
@@ -97,7 +113,6 @@
             color: #555;
         }
 
-        /* ---------- CUPOS ---------- */
         .cupo-card {
             background: #f8f9fc;
             border-left: 6px solid #1976d2;
@@ -105,11 +120,6 @@
             padding: 18px 20px;
             margin-bottom: 18px;
             box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-            transition: transform 0.2s ease;
-        }
-
-        .cupo-card:hover {
-            transform: translateY(-3px);
         }
 
         .cupo-card h3 {
@@ -153,7 +163,6 @@
             color: #c62828;
         }
 
-        /* ---------- FOOTER ---------- */
         footer {
             margin-top: 40px;
             text-align: center;
@@ -162,28 +171,12 @@
             padding-bottom: 25px;
         }
 
-        /* ---------- RESPONSIVE ---------- */
         @media (max-width: 700px) {
-            .header-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
             header h1 {
                 font-size: 24px;
             }
-
-            .header-buttons {
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-
             .container {
                 padding: 22px;
-            }
-
-            .section-title {
-                font-size: 22px;
             }
         }
     </style>
@@ -197,7 +190,6 @@
             Instituto de Educación Superior N° 6.021<br>
             Juan Carlos Dávalos
         </h1>
-
         <div class="header-buttons">
             <a href="login.html" class="header-button">
                 <i class="fas fa-user"></i> Iniciar sesión
@@ -210,6 +202,32 @@
 </header>
 
 <div class="container">
+
+    <div class="mensaje-institucional">
+        <h2><i class="fas fa-university"></i> Comunicado Institucional</h2>
+    
+        <p style="font-size:17px; font-weight:700; color:#0d47a1;">
+            Si aún no estás registrado, podés hacerlo desde esta página y completar tu inscripción.
+        </p>
+    
+        <p><strong>Estimados postulantes:</strong></p>
+    
+        <p>
+            Desde la Rectoría del Instituto de Educación Superior N° 6.021 queremos darles la bienvenida
+            a este nuevo período lectivo 2026.
+        </p>
+    
+        <p>
+            Informamos que las preinscripciones han tenido una altísima concurrencia, por lo cual los
+            cupos habilitados fueron ajustados de acuerdo con las condiciones edilicias de la institución.
+        </p>
+    
+        <p>
+            Asimismo, comunicamos que aún quedan <strong>cupos disponibles</strong> para el
+            <strong>Profesorado de Educación Secundaria en Geografía</strong>.
+        </p>
+    </div>
+    
 
     <h2 class="section-title">
         <i class="fas fa-chart-bar"></i> Cupos disponibles por carrera
@@ -267,16 +285,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                         Cupo máximo: <strong>${carrera.cupoMaximo}</strong><br>
                         Inscriptos: <strong>${carrera.inscriptos}</strong><br>
                         Disponibles: <strong>${carrera.disponibles}</strong><br>
-                        <span class="estado ${estadoClass}">
-                            ${estadoTexto}
-                        </span>
+                        <span class="estado ${estadoClass}">${estadoTexto}</span>
                     </div>
                 </div>
             `;
         });
 
     } catch (error) {
-        console.error("Error:", error);
         contenedor.innerHTML = "<p>Error al cargar los cupos.</p>";
     }
 });
