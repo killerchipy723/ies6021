@@ -563,7 +563,7 @@ app.post('/inscripciones/nueva', async (req, res) => {
              FROM preinscripcion i
              JOIN alumno a ON a.idalumno = i.idalumno
              JOIN carreras c ON c.idcarrera = i.idcarrera
-             WHERE a.idalumno = ? AND i.estado = 'Activo'`,
+             WHERE a.idalumno = ? AND i.estado = 'Activo' ORDER BY a.apellidos ASC`,
             [idAlumno]
         );
 
