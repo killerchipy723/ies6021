@@ -11,22 +11,21 @@
     <link rel="icon" href="./esc.ico">
 </head>
 <body>
+
+
+    <div class="container">
+        <div class="text-center py-3">
+            <h1 class="m-0">Instituto de Educación Superior N° 6.021</h1>
+            <h2 class="m-0">Juan Carlos Dávalos</h2>
+        </div>
+    </div>
+
+
+
     <div class="container mt-5">
         <h1 class="text-center mb-4">Resumen de inscripciones - IES 6021 JC DAVALOS</h1>
 
-        <div class="col-md-12" style="padding: 20px; background-color: #f9f9f9; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-                <h3 style="color: #007bff; margin: 0;">Resumen de Alumnos por carrera</h3>
-                <div style="display: flex; align-items: center; font-size: 1rem;">
-                    <span style="font-weight: bold; margin-right: 5px;">Total Alumnos Inscriptos:</span>
-                    <span id="total-alumnos" style="color: #28a745; font-weight: bold;">0</span>
-                </div>
-            </div>
-            <ul id="alumnos-por-carrera" style="list-style: none; padding: 0; margin: 0;">
-                <!-- Las carreras y barras de progreso se generarán dinámicamente -->
-            </ul>
-        </div>
-        
+             
                 
         
         <!-- Filtros y Resumen -->
@@ -45,10 +44,7 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Alumno</th>
-                    <th>DNI</th>
-                    <th>Teléfono</th>
-                    <th>Correo</th>
+                    <th>Alumno</th>                  
                     <th>Carrera</th>
                     <th>Fecha</th>
                 </tr>
@@ -183,10 +179,7 @@ function renderTable(inscripciones) {
         const fila = document.createElement('tr');
         fila.innerHTML = `
             <td>${inscripcion.idinscripcion}</td>
-            <td>${inscripcion.Alumno}</td>
-            <td>${inscripcion.dni}</td>
-            <td>${inscripcion.telefono}</td>
-            <td>${inscripcion.correo}</td>
+            <td>${inscripcion.Alumno}</td>          
             <td>${inscripcion.Carrera}</td>
             <td>${inscripcion.fecha}</td>
         `;

@@ -20,7 +20,7 @@ const port = 1986;
 
 // -------------- Quitar esta ruta cuando se activen las preincipciones --------------------------
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', '6021.html'));
 });
 
  
